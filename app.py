@@ -679,7 +679,7 @@ HTML_TEMPLATE = """
                 ];
             }
             const box = document.getElementById('pieces_box');
-            box.value = (box.value.trim() ? box.value.trim() + '\n' : '') + lines.join('\n');
+            box.value = (box.value.trim() ? box.value.trim() + String.fromCharCode(10) : '') + lines.join(String.fromCharCode(10));
             openTab('tab1', document.querySelector('.tab-btn'));
         }
         window.addEventListener('DOMContentLoaded', () => { setTimeout(draw3D, 200); });
