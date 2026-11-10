@@ -25,7 +25,7 @@ IBAN_INFO = "TR00 0000 0000 0000 0000 0000 00"  # ضع الآيبان الخاص
 PRO_PRICE = "250 TL / شهرياً"
 ADMIN_UNLOCK_CODE = "QAIS2026"
 
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
+OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY", "")
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "")
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN", "")
 GITHUB_REPO = os.getenv("GITHUB_REPO", "")
@@ -194,17 +194,15 @@ def parse_edges(tok):
     return min(le, 2), min(we, 2)
 
 def ocr_image_ai(img_bytes):
-    if not GEMINI_API_KEY:
-        raise ValueError("مفتاح GEMINI_API_KEY غير موجود في إعدادات السيرفر")
+    if not OPENROUTER_API_KEY:
+        raise ValueError("مفتاح OPENROUTER_API_KEY غير موجود في إعدادات السيرفر")
     if not requests:
         raise ValueError("مكتبة requests غير مثبتة")
 
-    # تحويل أي نوع صورة (PNG, WEBP, JPEG, ...) إلى JPEG لضمان التوافق التام
     try:
         im = Image.open(io.BytesIO(img_bytes))
         if im.mode != "RGB":
             im = im.convert("RGB")
-        # تصغير الصور الكبيرة جداً لتسريع الرفع والقراءة
         im.thumbnail((1600, 1600))
         buf = io.BytesIO()
         im.save(buf, format="JPEG", quality=88)
@@ -213,30 +211,51 @@ def ocr_image_ai(img_bytes):
         raise ValueError(f"تعذر قراءة ملف الصورة: {e}")
 
     b64 = base64.b64encode(jpeg_bytes).decode("utf-8")
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key={GEMINI_API_KEY}"
-    payload = {
-        "contents": [{
-            "parts": [
-                {"text": "Read this handwritten or printed wood cutting list carefully. Extract dimensions as: Length Width Qty Edges (e.g., 800 600 4 2). If edges are not specified, use 0. Output ONLY the numeric lines, nothing else."},
-                {"inline_data": {"mime_type": "image/jpeg", "data": b64}}
-            ]
-        }]
+    url = "https://openrouter.ai/api/v1/chat/completions"
+    headers = {
+        "Authorization": f"Bearer {OPENROUTER_API_KEY}",
+        "Content-Type": "application/json",
+        "HTTP-Referer": "https://abu-alqais.onrender.com",
+        "X-Title": "Abu Al-Qais Woodwork"
     }
-    res = None
-    for attempt in range(3):
-        res = requests.post(url, json=payload, timeout=30)
-        if res.status_code == 200:
-            break
-        if res.status_code in (429, 500, 503) and attempt < 2:
-            time.sleep(2)
-            continue
-        raise ValueError(f"خطأ من Gemini ({res.status_code}): {res.text[:200]}")
 
-    data = res.json()
-    text = data["candidates"][0]["content"]["parts"][0]["text"].strip()
-    if not text:
-        raise ValueError("لم يتمكن الذكاء الاصطناعي من استخراج أي مقاسات من الصورة")
-    return text
+    # قائمة نماذج مجانية تدعم قراءة الصور مع التبديل التلقائي عند الضغط
+    free_models = [
+        "qwen/qwen2.5-vl-72b-instruct:free",
+        "meta-llama/llama-3.2-11b-vision-instruct:free",
+        "google/gemini-2.0-flash-exp:free"
+    ]
+
+    last_err = ""
+    for model in free_models:
+        payload = {
+            "model": model,
+            "messages": [{
+                "role": "user",
+                "content": [
+                    {
+                        "type": "text",
+                        "text": "Read this handwritten or printed wood cutting list carefully. Extract dimensions as: Length Width Qty Edges (e.g., 800 600 4 2). If edges are not specified, use 0. Output ONLY the numeric lines, nothing else."
+                    },
+                    {
+                        "type": "image_url",
+                        "image_url": {"url": f"data:image/jpeg;base64,{b64}"}
+                    }
+                ]
+            }]
+        }
+        try:
+            res = requests.post(url, headers=headers, json=payload, timeout=35)
+            if res.status_code == 200:
+                data = res.json()
+                text = data["choices"][0]["message"]["content"].strip()
+                if text:
+                    return text
+            last_err = f"({res.status_code}): {res.text[:150]}"
+        except Exception as e:
+            last_err = str(e)
+
+    raise ValueError(f"تعذر القراءة من OpenRouter {last_err}")
 
 # ============================ الرسم والفواتير ============================
 @lru_cache(maxsize=16)
