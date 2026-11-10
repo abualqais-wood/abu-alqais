@@ -27,6 +27,11 @@ WORKSHOP_NAME = "أبو القيس"
 WORKSHOP_PHONE = "05466126354"
 IBAN_INFO = "TR00 0000 0000 0000 0000 0000 00"  # ضع الآيبان الخاص بك هنا
 PRO_PRICE = "250 TL / شهرياً"
+TIERS = {
+    "pro": {"name": "Pro (برو)", "price": "250 TL / شهرياً", "desc": "تقطيع الألواح + الفاتورة + قراءة الصور AI + القوالب الجاهزة"},
+    "promax": {"name": "Pro Max (برو ماكس)", "price": "450 TL / شهرياً", "desc": "كل ميزات Pro + اسم الورشة + دفتر الورشة والمخزون + رابط عامل المنشار + واتساب"},
+    "ultra": {"name": "Ultra (أولترا)", "price": "750 TL / شهرياً", "desc": "كل ميزات Pro Max + تصدير CNC CSV + قارتيلا 75+75 + PDF + ملصقات Etiket"}
+}
 ADMIN_UNLOCK_CODE = "QAIS2026"
 
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY", "")
@@ -90,33 +95,40 @@ def save_store(store):
     except Exception:
         return False
 
-def generate_single_code():
+def generate_single_code(tier="pro"):
+    tier = tier.lower().strip()
+    if tier not in TIERS:
+        tier = "pro"
     store = load_store(force=True)
     part1 = "".join(random.choices(string.digits, k=4))
     part2 = "".join(random.choices(string.ascii_uppercase, k=2))
-    new_code = f"QAIS-{part1}-{part2}"
-    store["codes"][new_code] = {"used": False, "created_at": int(time.time()), "used_at": None, "used_by": None}
+    prefix = {"pro": "PRO", "promax": "MAX", "ultra": "ULT"}[tier]
+    new_code = f"QAIS-{prefix}-{part1}-{part2}"
+    store["codes"][new_code] = {"used": False, "tier": tier, "created_at": int(time.time()), "used_at": None, "used_by": None}
     save_store(store)
     return new_code
 
 def redeem_single_code(code_str, user_id="web"):
     code_str = code_str.strip().upper()
     if code_str == ADMIN_UNLOCK_CODE:
-        return True, "تم التفعيل (كود الإدارة)!"
+        return True, "تم التفعيل (كود الإدارة - Ultra)!", "ultra"
     store = load_store(force=True)
     c_info = store["codes"].get(code_str)
     if not c_info:
-        return False, "كود التفعيل غير صحيح!"
+        return False, "كود التفعيل غير صحيح!", "pro"
     if c_info.get("used"):
-        return False, "هذا الكود تم استخدامه مسبقاً!"
+        return False, "هذا الكود تم استخدامه مسبقاً!", "pro"
+    tier = c_info.get("tier", "pro")
     c_info["used"] = True
     c_info["used_at"] = int(time.time())
     c_info["used_by"] = str(user_id)
     if str(user_id) != "web":
-        u = store["tg_users"].setdefault(str(user_id), {"trial_used": True, "pro_until": 0})
+        u = store["tg_users"].setdefault(str(user_id), {"trial_used": True, "pro_until": 0, "tier": tier})
         u["pro_until"] = int(time.time()) + 30 * 86400
+        u["tier"] = tier
     save_store(store)
-    return True, "تم تفعيل الاشتراك بنجاح لمدة 30 يوماً!"
+    t_name = TIERS.get(tier, TIERS["pro"])["name"]
+    return True, f"تم تفعيل باقة {t_name} بنجاح لمدة 30 يوماً!", tier
 
 def build_cut_summary(groups):
     lines = ["📋 ملخص القص لعامل المنشار:"]
@@ -814,7 +826,21 @@ HTML_TEMPLATE = """
     {% if paywall %}
     <div class="paywall">
         <h3>{{ t['pay_title'] }}</h3>
-        <p>{{ t['pay_desc'] }} ({{ price }})</p>
+        <p>{{ t['pay_desc'] }}</p>
+        <div style="display:flex; flex-direction:column; gap:8px; margin:12px 0; text-align:right;">
+            <div style="background:#fff; padding:10px; border-radius:8px; border:1px solid #cbd5e1;">
+                <b>🔹 باقة Pro — 250 TL / شهرياً</b><br>
+                <span style="font-size:12px; color:#475569;">تقطيع الألواح + الفاتورة + قراءة الصور AI + القوالب الجاهزة</span>
+            </div>
+            <div style="background:#fff; padding:10px; border-radius:8px; border:2px solid #2563eb;">
+                <b>🔸 باقة Pro Max — 450 TL / شهرياً</b><br>
+                <span style="font-size:12px; color:#475569;">كل ميزات Pro + اسم الورشة + دفتر الورشة والمخزون + رابط عامل المنشار + واتساب</span>
+            </div>
+            <div style="background:#fff; padding:10px; border-radius:8px; border:2px solid #b45309;">
+                <b>👑 باقة Ultra — 750 TL / شهرياً</b><br>
+                <span style="font-size:12px; color:#475569;">كل ميزات Pro Max + تصدير CNC CSV + قارتيلا 75+75 + PDF + ملصقات Etiket</span>
+            </div>
+        </div>
         <div class="iban">{{ iban }}</div>
         <form method="POST">
             <input type="text" name="unlock_code" placeholder="{{ t['pay_ph'] }}" required>
@@ -1188,10 +1214,11 @@ def home():
     if request.method == "POST":
         code = request.form.get("unlock_code", "").strip()
         if code:
-            ok, msg_txt = redeem_single_code(code, "web")
+            ok, msg_txt, tier = redeem_single_code(code, "web")
             if ok:
                 resp = make_response(render_template_string(HTML_TEMPLATE, **ctx))
                 resp.set_cookie("is_pro", "1", max_age=30*86400)
+                resp.set_cookie("sub_tier", tier, max_age=30*86400)
                 return resp
             ctx["paywall"], ctx["error"] = True, msg_txt
             return render_template_string(HTML_TEMPLATE, **ctx)
@@ -1569,7 +1596,7 @@ def telegram_webhook():
             "• استخدم الأزرار بالأسفل لتغيير الإعدادات:"
         )
         if is_admin:
-            welcome += "\n\n👑 أوامر الإدارة:\n`/newcode` | `/stats` | `/broadcast الرسالة`\n`/ban المعرف` | `/unban المعرف`"
+            welcome += "\n\n👑 أوامر الإدارة:\n`/newcode pro` | `/newcode promax` | `/newcode ultra` | `/stats` | `/broadcast الرسالة`\n`/ban المعرف` | `/unban المعرف`"
         tg_send_msg(chat_id, welcome, main_menu_markup(s, host_url))
         return "OK", 200
 
@@ -1619,12 +1646,17 @@ def telegram_webhook():
         tg_send_msg(chat_id, f"✅ تم إلغاء حظر المستخدم `{target_id}`.")
         return "OK", 200
 
-    if text == "/newcode":
+    if text.startswith("/newcode"):
         if not is_admin:
             tg_send_msg(chat_id, "⛔ هذا الأمر مخصص لصاحب البوت فقط.")
             return "OK", 200
-        new_c = generate_single_code()
-        tg_send_msg(chat_id, f"🎟️ كود تفعيل جديد (لاستخدام واحد لمدة 30 يوماً):\n`{new_c}`")
+        parts = text.split(maxsplit=1)
+        tier = parts[1].strip().lower() if len(parts) > 1 else "pro"
+        if tier not in TIERS:
+            tier = "pro"
+        new_c = generate_single_code(tier)
+        t_name = TIERS[tier]["name"]
+        tg_send_msg(chat_id, f"🎟️ كود تفعيل جديد لباقة **{t_name}** (لمدة 30 يوماً):\n`{new_c}`")
         return "OK", 200
 
     if text == "/stats":
@@ -1646,7 +1678,7 @@ def telegram_webhook():
         if len(parts) < 2:
             tg_send_msg(chat_id, "⚠️ أرسل الكود هكذا:\n`/activate QAIS-1234-AB`")
             return "OK", 200
-        ok, msg_txt = redeem_single_code(parts[1], chat_id)
+        ok, msg_txt, _ = redeem_single_code(parts[1], chat_id)
         tg_send_msg(chat_id, ("✅ " if ok else "❌ ") + msg_txt)
         return "OK", 200
 
