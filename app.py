@@ -521,6 +521,29 @@ HTML_TEMPLATE = """
         let angle3D = 35;
         function rot3D(deg) { angle3D += deg; draw3D(); }
 
+        const TPL_PHOTOS = {
+            wardrobe2: "https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=500&q=80",
+            wardrobe3: "https://images.unsplash.com/photo-1558997519-83ea9252edf8?w=500&q=80",
+            wardrobe_slide: "https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=500&q=80",
+            shoe_cab: "https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=500&q=80",
+            bookcase: "https://images.unsplash.com/photo-1594620302200-9a762244a156?w=500&q=80",
+            kit_base: "https://images.unsplash.com/photo-1556911220-bff31c812dba?w=500&q=80",
+            kit_wall: "https://images.unsplash.com/photo-1556911220-bff31c812dba?w=500&q=80",
+            kit_drawers: "https://images.unsplash.com/photo-1556911220-bff31c812dba?w=500&q=80",
+            kit_tall: "https://images.unsplash.com/photo-1556911220-bff31c812dba?w=500&q=80",
+            nightstand: "https://images.unsplash.com/photo-1532372320572-cda25653a26d?w=500&q=80",
+            chiffonier: "https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=500&q=80",
+            dresser: "https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=500&q=80",
+            bed_single: "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=500&q=80",
+            bed_double: "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=500&q=80",
+            table_dining: "https://images.unsplash.com/photo-1577140917170-285929fb55b7?w=500&q=80",
+            table_coffee: "https://images.unsplash.com/photo-1533090481720-856c6e3c1fdc?w=500&q=80",
+            desk_office: "https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?w=500&q=80",
+            tv_unit: "https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=500&q=80",
+            chair_simple: "https://images.unsplash.com/photo-1503602642458-232111445657?w=500&q=80",
+            bench_storage: "https://images.unsplash.com/photo-1503602642458-232111445657?w=500&q=80",
+            storage_box: "https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=500&q=80"
+        };
         const TPL_DEFAULTS = {
             wardrobe2: [2000, 1000, 600], wardrobe3: [2100, 1500, 600], wardrobe_slide: [2200, 1800, 650],
             shoe_cab: [1100, 800, 350], bookcase: [1800, 800, 320],
@@ -537,6 +560,8 @@ HTML_TEMPLATE = """
             document.getElementById('tpl_h').value = d[0];
             document.getElementById('tpl_w').value = d[1];
             document.getElementById('tpl_d').value = d[2];
+            const imgEl = document.getElementById('tpl_preview_img');
+            if (imgEl && TPL_PHOTOS[k]) imgEl.src = TPL_PHOTOS[k];
             draw3D();
         }
 
@@ -864,6 +889,9 @@ HTML_TEMPLATE = """
                 <div><label>العرض W (مم)</label><input type="number" id="tpl_w" value="1000" oninput="draw3D()"></div>
                 <div><label>العمق D (مم)</label><input type="number" id="tpl_d" value="600" oninput="draw3D()"></div>
             </div>
+            <div style="text-align:center; margin:10px 0;">
+                <img id="tpl_preview_img" src="https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=500&q=80" style="max-height:170px; width:auto; max-width:100%; object-fit:cover; border-radius:10px; border:1px solid var(--inp-brd);" alt="شكل القطعة جاهزة">
+            </div>
             <div style="text-align:center; margin:12px 0; background:var(--inp-bg); border:1px solid var(--inp-brd); border-radius:10px; padding:10px;">
                 <canvas id="canvas3d" width="320" height="220" style="max-width:100%;"></canvas>
                 <div style="display:flex; justify-content:center; gap:10px; margin-top:8px;">
@@ -1049,15 +1077,15 @@ def home():
 # ============================ بوت تليجرام (Webhook) ============================
 
 TG_TEMPLATES = {
-    "wardrobe2": ("خزانة ملابس ببابين (2000×1000×600)", "2000 600 2 1\n964 600 2 1\n964 580 2 1\n1996 497 2 4"),
-    "wardrobe3": ("خزانة ملابس 3 أبواب (2100×1500×600)", "2100 600 2 1\n1464 600 2 1\n2064 580 1 1\n732 580 4 1\n2096 497 3 4"),
-    "kit_base": ("مطبخ سفلي بابين (720×800×560)", "720 560 2 1\n764 560 2 1\n764 540 1 1\n716 397 2 4"),
-    "kit_wall": ("مطبخ علوي بابين (720×800×320)", "720 320 2 1\n764 320 2 1\n764 300 1 1\n716 397 2 4"),
-    "nightstand": ("كومودينو 2 درج (500×450×400)", "500 400 2 1\n414 400 2 1\n228 446 2 4\n350 140 4 1\n354 140 4 1"),
-    "chiffonier": ("شفونير 4 دروج (900×800×450)", "900 450 2 1\n764 450 2 1\n212 796 4 4\n400 140 8 1\n704 140 8 1"),
-    "table_dining": ("طاولة طعام (750×1400×800)", "1400 800 1 4\n732 760 2 2\n1300 120 2 1"),
-    "desk_office": ("مكتب عمل (750×1200×600)", "1200 600 1 4\n732 560 2 2\n1100 120 2 1"),
-    "storage_box": ("صندوق تخزين (450×800×400)", "800 400 2 4\n414 800 2 2\n414 364 2 2"),
+    "wardrobe2": ("خزانة ملابس ببابين (2000×1000×600)", "2000 600 2 1\n964 600 2 1\n964 580 2 1\n1996 497 2 4", "https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=600&q=80"),
+    "wardrobe3": ("خزانة ملابس 3 أبواب (2100×1500×600)", "2100 600 2 1\n1464 600 2 1\n2064 580 1 1\n732 580 4 1\n2096 497 3 4", "https://images.unsplash.com/photo-1558997519-83ea9252edf8?w=600&q=80"),
+    "kit_base": ("مطبخ سفلي بابين (720×800×560)", "720 560 2 1\n764 560 2 1\n764 540 1 1\n716 397 2 4", "https://images.unsplash.com/photo-1556911220-bff31c812dba?w=600&q=80"),
+    "kit_wall": ("مطبخ علوي بابين (720×800×320)", "720 320 2 1\n764 320 2 1\n764 300 1 1\n716 397 2 4", "https://images.unsplash.com/photo-1556911220-bff31c812dba?w=600&q=80"),
+    "nightstand": ("كومودينو 2 درج (500×450×400)", "500 400 2 1\n414 400 2 1\n228 446 2 4\n350 140 4 1\n354 140 4 1", "https://images.unsplash.com/photo-1532372320572-cda25653a26d?w=600&q=80"),
+    "chiffonier": ("شفونير 4 دروج (900×800×450)", "900 450 2 1\n764 450 2 1\n212 796 4 4\n400 140 8 1\n704 140 8 1", "https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=600&q=80"),
+    "table_dining": ("طاولة طعام (750×1400×800)", "1400 800 1 4\n732 760 2 2\n1300 120 2 1", "https://images.unsplash.com/photo-1577140917170-285929fb55b7?w=600&q=80"),
+    "desk_office": ("مكتب عمل (750×1200×600)", "1200 600 1 4\n732 560 2 2\n1100 120 2 1", "https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?w=600&q=80"),
+    "storage_box": ("صندوق تخزين (450×800×400)", "800 400 2 4\n414 800 2 2\n414 364 2 2", "https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=600&q=80"),
 }
 
 BOT_SESSIONS = {}
@@ -1233,8 +1261,8 @@ def telegram_webhook():
         elif data.startswith("run_tpl_"):
             tkey = data.replace("run_tpl_", "")
             if tkey in TG_TEMPLATES:
-                tname, tpieces = TG_TEMPLATES[tkey]
-                tg_send_msg(chat_id, f"🧊 تم اختيار: **{tname}**\nجاري حساب التقطيع وإصدار الفاتورة...")
+                tname, tpieces, tphoto = TG_TEMPLATES[tkey]
+                tg_api("sendPhoto", data={"chat_id": chat_id, "photo": tphoto, "caption": f"🪑 شكل القطعة بعد التركيب: {tname}\n⏳ جاري حساب التقطيع وإصدار الفاتورة..."})
                 try:
                     groups = []
                     for line in tpieces.splitlines():
