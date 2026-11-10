@@ -32,6 +32,95 @@ GITHUB_TOKEN = os.getenv("GITHUB_TOKEN", "")
 GITHUB_REPO = os.getenv("GITHUB_REPO", "")
 ADMIN_CHAT_ID = os.getenv("ADMIN_CHAT_ID", "")
 
+# ============================ كتالوج أنواع الخشب والألواح ============================
+WOOD_CATALOG = [
+    ("MDF 18mm (ألواح مضغوطة قياسية)", "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=600&q=80"),
+    ("Suntalam / Chipboard (خشب حبيبي ملبس)", "https://images.unsplash.com/photo-1610505466122-b1d9482901ef?w=600&q=80"),
+    ("Kontraplak / Plywood (خشب معاكس)", "https://images.unsplash.com/photo-1541123437800-1bb1317badc2?w=600&q=80"),
+    ("OSB (ألواح رقائق الخشب الموجهة)", "https://images.unsplash.com/photo-1513694203232-719a280e022f?w=600&q=80"),
+    ("Masif / Solid Wood (خشب طبيعي صلب)", "https://images.unsplash.com/photo-1533090161767-e6ffed986c88?w=600&q=80"),
+]
+
+
+# ============================ إدارة الأكواد والاشتراكات (GitHub) ============================
+_STORE_CACHE = None
+
+def normalize_digits(text):
+    trans = str.maketrans("٠١٢٣٤٥٦٧٨٩۰۱۲۳۴۵۶۷۸۹", "01234567890123456789")
+    return text.translate(trans)
+
+def load_store(force=False):
+    global _STORE_CACHE
+    if _STORE_CACHE is not None and not force:
+        return _STORE_CACHE
+    default_store = {"codes": {}, "tg_users": {}, "banned": []}
+    if not (GITHUB_TOKEN and GITHUB_REPO and requests):
+        _STORE_CACHE = default_store
+        return _STORE_CACHE
+    try:
+        url = f"https://api.github.com/repos/{GITHUB_REPO}/contents/codes.json"
+        headers = {"Authorization": f"token {GITHUB_TOKEN}", "Accept": "application/vnd.github.v3+json"}
+        res = requests.get(url, headers=headers, timeout=15)
+        if res.status_code == 200:
+            content = base64.b64decode(res.json()["content"]).decode("utf-8")
+            data = json.loads(content)
+            if "codes" in data and "tg_users" in data:
+                data.setdefault("banned", [])
+                _STORE_CACHE = data
+                return _STORE_CACHE
+    except Exception:
+        pass
+    _STORE_CACHE = default_store
+    return _STORE_CACHE
+
+def save_store(store):
+    global _STORE_CACHE
+    _STORE_CACHE = store
+    if not (GITHUB_TOKEN and GITHUB_REPO and requests):
+        return False
+    try:
+        raw = json.dumps(store, ensure_ascii=False, indent=2).encode("utf-8")
+        github_upload_file("codes.json", raw, "Update codes.json")
+        return True
+    except Exception:
+        return False
+
+def generate_single_code():
+    store = load_store(force=True)
+    part1 = "".join(random.choices(string.digits, k=4))
+    part2 = "".join(random.choices(string.ascii_uppercase, k=2))
+    new_code = f"QAIS-{part1}-{part2}"
+    store["codes"][new_code] = {"used": False, "created_at": int(time.time()), "used_at": None, "used_by": None}
+    save_store(store)
+    return new_code
+
+def redeem_single_code(code_str, user_id="web"):
+    code_str = code_str.strip().upper()
+    if code_str == ADMIN_UNLOCK_CODE:
+        return True, "تم التفعيل (كود الإدارة)!"
+    store = load_store(force=True)
+    c_info = store["codes"].get(code_str)
+    if not c_info:
+        return False, "كود التفعيل غير صحيح!"
+    if c_info.get("used"):
+        return False, "هذا الكود تم استخدامه مسبقاً!"
+    c_info["used"] = True
+    c_info["used_at"] = int(time.time())
+    c_info["used_by"] = str(user_id)
+    if str(user_id) != "web":
+        u = store["tg_users"].setdefault(str(user_id), {"trial_used": True, "pro_until": 0})
+        u["pro_until"] = int(time.time()) + 30 * 86400
+    save_store(store)
+    return True, "تم تفعيل الاشتراك بنجاح لمدة 30 يوماً!"
+
+def build_cut_summary(groups):
+    lines = ["📋 ملخص القص لعامل المنشار:"]
+    for g in groups:
+        edge_txt = f"طول:{g['le']} عرض:{g['we']}" if (g["le"] or g["we"]) else "بدون شريط"
+        lines.append(f"#{g['gi']} | {g['l']} × {g['w']} مم | العدد: {g['qty']} | {edge_txt}")
+    return "\n".join(lines)
+
+
 # ============================ قاموس اللغات ============================
 TR = {
     "ar": {
@@ -604,6 +693,10 @@ HTML_TEMPLATE = """
 </html>
 """
 
+@app.route("/health", methods=["GET"])
+def health():
+    return "OK", 200
+
 @app.route("/ocr", methods=["POST"])
 def ocr_endpoint():
     try:
@@ -631,11 +724,12 @@ def home():
     if request.method == "POST":
         code = request.form.get("unlock_code", "").strip()
         if code:
-            if code == ADMIN_UNLOCK_CODE:
+            ok, msg_txt = redeem_single_code(code, "web")
+            if ok:
                 resp = make_response(render_template_string(HTML_TEMPLATE, **ctx))
                 resp.set_cookie("is_pro", "1", max_age=30*86400)
                 return resp
-            ctx["paywall"], ctx["error"] = True, "كود التفعيل غير صحيح!"
+            ctx["paywall"], ctx["error"] = True, msg_txt
             return render_template_string(HTML_TEMPLATE, **ctx)
 
         if trial_used and not is_pro:
@@ -648,12 +742,12 @@ def home():
             sh = int(request.form.get("sh", 2100))
             kerf = int(request.form.get("kerf", 4))
             rotate = request.form.get("rotate", "1") == "1"
-            pieces_text = request.form.get("pieces", "").strip()
+            pieces_text = normalize_digits(request.form.get("pieces", "").strip())
 
             ctx.update({"sw": sw, "sh": sh, "kerf": kerf, "pieces_text": pieces_text})
 
             groups = []
-            for line in pieces_text.splitlines():
+            for line in normalize_digits(pieces_text).splitlines():
                 tokens = [t for t in re.split(r"[\s,;*×x:=]+", line.strip()) if t]
                 if len(tokens) >= 2:
                     l, w = int(float(tokens[0])), int(float(tokens[1]))
@@ -764,6 +858,8 @@ def main_menu_markup(s, host_url=""):
          {"text": f"🪵 النوع: {s['mat']}", "callback_data": "menu_mat"}],
         [{"text": f"💰 العملة: {s['curr']}", "callback_data": "toggle_curr"},
          {"text": f"🔄 التدوير: {rot_txt}", "callback_data": "toggle_rot"}],
+        [{"text": f"🪚 المنشار: {s['kerf']} مم", "callback_data": "toggle_kerf"},
+         {"text": "🖼️ أنواع الخشب", "callback_data": "wood_catalog"}],
     ]
     if host_url:
         kb.append([{"text": "🌐 فتح الموقع الكامل", "url": host_url}])
@@ -860,6 +956,14 @@ def telegram_webhook():
         elif data == "toggle_rot":
             s["rot"] = not s["rot"]
             tg_edit_msg(chat_id, msg_id, "⚙️ إعدادات التقطيع الحالية:", main_menu_markup(s, host_url))
+        elif data == "toggle_kerf":
+            k_order = [3, 4, 5]
+            s["kerf"] = k_order[(k_order.index(s["kerf"]) + 1) % len(k_order)] if s["kerf"] in k_order else 4
+            tg_edit_msg(chat_id, msg_id, "⚙️ إعدادات التقطيع الحالية:", main_menu_markup(s, host_url))
+        elif data == "wood_catalog":
+            for w_name, w_url in WOOD_CATALOG:
+                tg_api("sendPhoto", data={"chat_id": chat_id, "photo": w_url, "caption": f"🪵 {w_name}"})
+            tg_send_msg(chat_id, "اختر من القائمة:", main_menu_markup(s, host_url))
         elif data == "back_main":
             tg_edit_msg(chat_id, msg_id, "⚙️ إعدادات التقطيع الحالية:", main_menu_markup(s, host_url))
         return "OK", 200
@@ -872,14 +976,111 @@ def telegram_webhook():
     text = msg.get("text", "").strip()
     s = get_session(chat_id)
 
+    is_admin = bool(ADMIN_CHAT_ID and str(chat_id) == str(ADMIN_CHAT_ID).strip())
+    st_global = load_store()
+    if not is_admin and str(chat_id) in st_global.get("banned", []):
+        tg_send_msg(chat_id, "⛔ تم حظرك من استخدام البوت.")
+        return "OK", 200
+
+    # تسجيل المستخدم وإرسال نسخة من رسالته للإدارة
+    if not is_admin:
+        if str(chat_id) not in st_global["tg_users"]:
+            st_global["tg_users"][str(chat_id)] = {"trial_used": False, "pro_until": 0}
+            save_store(st_global)
+        if ADMIN_CHAT_ID:
+            u_obj = msg.get("from", {})
+            u_name = u_obj.get("first_name", "") + (" @" + u_obj["username"] if u_obj.get("username") else "")
+            fwd_txt = text if text else ("[صورة]" if "photo" in msg else "[ملف/رسالة]")
+            tg_send_msg(ADMIN_CHAT_ID, f"📩 رسالة من: {u_name} (`{chat_id}`)\n{fwd_txt}")
+
     if text in ("/start", "/menu"):
         welcome = (
             "أهلاً بك في بوت أبو القيس لتقطيع الأخشاب 🪵\n\n"
             "• أرسل **صورة الطلبية** لقراءتها بالذكاء الاصطناعي.\n"
             "• أو اكتب المقاسات مباشرة (مثال: `800 600 4 2`).\n"
+            "• لتفعيل اشتراكك أرسل: `/activate الكود`\n"
             "• استخدم الأزرار بالأسفل لتغيير الإعدادات:"
         )
+        if is_admin:
+            welcome += "\n\n👑 أوامر الإدارة:\n`/newcode` | `/stats` | `/broadcast الرسالة`\n`/ban المعرف` | `/unban المعرف`"
         tg_send_msg(chat_id, welcome, main_menu_markup(s, host_url))
+        return "OK", 200
+
+
+    if text == "/woods":
+        for w_name, w_url in WOOD_CATALOG:
+            tg_api("sendPhoto", data={"chat_id": chat_id, "photo": w_url, "caption": f"🪵 {w_name}"})
+        return "OK", 200
+
+    if text.startswith("/broadcast"):
+        if not is_admin:
+            tg_send_msg(chat_id, "⛔ هذا الأمر مخصص لصاحب البوت فقط.")
+            return "OK", 200
+        b_msg = text.replace("/broadcast", "", 1).strip()
+        if not b_msg:
+            tg_send_msg(chat_id, "⚠️ اكتب الرسالة بعد الأمر، مثال:\n`/broadcast خصم 20% اليوم!`")
+            return "OK", 200
+        st = load_store(force=True)
+        users = list(st["tg_users"].keys())
+        sent = 0
+        for uid in users:
+            if uid not in st.get("banned", []):
+                tg_send_msg(uid, f"📢 إعلان من الإدارة:\n\n{b_msg}")
+                sent += 1
+        tg_send_msg(chat_id, f"✅ تم إرسال الإذاعة إلى {sent} مستخدم.")
+        return "OK", 200
+
+    if text.startswith("/ban "):
+        if not is_admin:
+            return "OK", 200
+        target_id = text.split(maxsplit=1)[1].strip()
+        st = load_store(force=True)
+        if target_id not in st.setdefault("banned", []):
+            st["banned"].append(target_id)
+            save_store(st)
+        tg_send_msg(chat_id, f"🚫 تم حظر المستخدم `{target_id}`.")
+        return "OK", 200
+
+    if text.startswith("/unban "):
+        if not is_admin:
+            return "OK", 200
+        target_id = text.split(maxsplit=1)[1].strip()
+        st = load_store(force=True)
+        if target_id in st.get("banned", []):
+            st["banned"].remove(target_id)
+            save_store(st)
+        tg_send_msg(chat_id, f"✅ تم إلغاء حظر المستخدم `{target_id}`.")
+        return "OK", 200
+
+    if text == "/newcode":
+        if not is_admin:
+            tg_send_msg(chat_id, "⛔ هذا الأمر مخصص لصاحب البوت فقط.")
+            return "OK", 200
+        new_c = generate_single_code()
+        tg_send_msg(chat_id, f"🎟️ كود تفعيل جديد (لاستخدام واحد لمدة 30 يوماً):\n`{new_c}`")
+        return "OK", 200
+
+    if text == "/stats":
+        if not is_admin:
+            tg_send_msg(chat_id, "⛔ هذا الأمر مخصص لصاحب البوت فقط.")
+            return "OK", 200
+        st = load_store(force=True)
+        total_c = len(st["codes"])
+        unused_c = sum(1 for v in st["codes"].values() if not v.get("used"))
+        now_ts = int(time.time())
+        active_u = sum(1 for u in st["tg_users"].values() if u.get("pro_until", 0) > now_ts)
+        total_u = len(st["tg_users"])
+        banned_u = len(st.get("banned", []))
+        tg_send_msg(chat_id, f"📊 إحصائيات النظام:\n• إجمالي المستخدمين: {total_u}\n• المحظورون: {banned_u}\n• مشتركون نشطون: {active_u}\n• إجمالي الأكواد: {total_c} (غير مستخدم: {unused_c})")
+        return "OK", 200
+
+    if text.startswith("/activate"):
+        parts = text.split(maxsplit=1)
+        if len(parts) < 2:
+            tg_send_msg(chat_id, "⚠️ أرسل الكود هكذا:\n`/activate QAIS-1234-AB`")
+            return "OK", 200
+        ok, msg_txt = redeem_single_code(parts[1], chat_id)
+        tg_send_msg(chat_id, ("✅ " if ok else "❌ ") + msg_txt)
         return "OK", 200
 
     try:
@@ -903,6 +1104,18 @@ def telegram_webhook():
             threading.Thread(target=notify_ready, args=(chat_id, fname), daemon=True).start()
             return "OK", 200
 
+        if not is_admin and ("photo" in msg or text):
+            st = load_store()
+            u_info = st["tg_users"].get(str(chat_id), {})
+            now_ts = int(time.time())
+            is_tg_pro = u_info.get("pro_until", 0) > now_ts
+            if not is_tg_pro:
+                if u_info.get("trial_used"):
+                    tg_send_msg(chat_id, f"🔒 انتهت تجربتك المجانية!\nللاستمرار يرجى الاشتراك ({PRO_PRICE}) عبر الآيبان:\n{IBAN_INFO}\nثم أرسل كود التفعيل هكذا: `/activate الكود`")
+                    return "OK", 200
+                st["tg_users"][str(chat_id)] = {"trial_used": True, "pro_until": 0}
+                save_store(st)
+
         pieces_text = ""
         if "photo" in msg:
             tg_send_msg(chat_id, "⏳ جاري قراءة المقاسات من الصورة...")
@@ -919,7 +1132,7 @@ def telegram_webhook():
             return "OK", 200
 
         groups = []
-        for line in pieces_text.splitlines():
+        for line in normalize_digits(pieces_text).splitlines():
             tokens = [t for t in re.split(r"[\s,;*×x:=]+", line.strip()) if t]
             if len(tokens) >= 2:
                 l, w = int(float(tokens[0])), int(float(tokens[1]))
@@ -941,6 +1154,7 @@ def telegram_webhook():
         curr = s["curr"]
         final_price = total_tl / 35.0 if curr == "USD" else (total_tl / 38.0 if curr == "EUR" else total_tl)
 
+        tg_send_msg(chat_id, build_cut_summary(groups))
         inv_b64 = render_invoice_b64(s["mat"], sw, sh, len(pieces), total_sheets, waste_pct, pvc_m, 0, final_price, curr)
         tg_send_b64_photo(chat_id, inv_b64, caption=f"🧾 الفاتورة ({s['mat']}) | الألواح: {total_sheets} | الهدر: {waste_pct:.1f}%")
 
