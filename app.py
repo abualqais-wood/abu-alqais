@@ -56,7 +56,7 @@ def load_store(force=False):
     global _STORE_CACHE
     if _STORE_CACHE is not None and not force:
         return _STORE_CACHE
-    default_store = {"codes": {}, "tg_users": {}, "banned": []}
+    default_store = {"codes": {}, "tg_users": {}, "banned": [], "offcuts": [], "ledger": []}
     if not (GITHUB_TOKEN and GITHUB_REPO and requests):
         _STORE_CACHE = default_store
         return _STORE_CACHE
@@ -69,6 +69,8 @@ def load_store(force=False):
             data = json.loads(content)
             if "codes" in data and "tg_users" in data:
                 data.setdefault("banned", [])
+                data.setdefault("offcuts", [])
+                data.setdefault("ledger", [])
                 _STORE_CACHE = data
                 return _STORE_CACHE
     except Exception:
@@ -129,7 +131,7 @@ TR = {
     "ar": {
         "dir": "rtl", "title": "أبو القيس - نظام النجارة المتكامل",
         "sub": "نظام تقطيع الأخشاب والتسعير | هاتف: " + WORKSHOP_PHONE,
-        "tab_cut": "📐 التقطيع والطلب", "tab_set": "⚙️ الأسعار والعملات", "tab_acc": "🔩 الإكسسوارات", "tab_tpl": "🧊 قوالب 3D",
+        "tab_cut": "📐 التقطيع والطلب", "tab_set": "⚙️ الأسعار والعملات", "tab_acc": "🔩 الإكسسوارات", "tab_tpl": "🧊 قوالب 3D", "tab_led": "📒 الدفتر والمخزون", "tab_kar": "🎨 قارتيلا 75+75",
         "mat_lbl": "نوع الخشب:", "sw_lbl": "طول اللوح (مم)", "sh_lbl": "عرض اللوح (مم)",
         "kerf_lbl": "سمك المنشار (Kerf)", "rot_lbl": "تدوير القطع", "yes": "مسموح", "no": "ممنوع",
         "pieces_lbl": "المقاسات (الطول العرض العدد الحواف):",
@@ -153,7 +155,7 @@ TR = {
     "tr": {
         "dir": "ltr", "title": "Abu Al-Qais - Kesim Optimizasyon",
         "sub": "Ahşap Kesim ve Maliyet Sistemi | Tel: " + WORKSHOP_PHONE,
-        "tab_cut": "📐 Kesim & Sipariş", "tab_set": "⚙️ Fiyat & Döviz", "tab_acc": "🔩 Aksesuar", "tab_tpl": "🧊 3D Şablonlar",
+        "tab_cut": "📐 Kesim & Sipariş", "tab_set": "⚙️ Fiyat & Döviz", "tab_acc": "🔩 Aksesuar", "tab_tpl": "🧊 3D Şablonlar", "tab_led": "📒 Defter & Fire", "tab_kar": "🎨 Kartela 75+75",
         "mat_lbl": "Malzeme Türü:", "sw_lbl": "Plaka Boyu (mm)", "sh_lbl": "Plaka Eni (mm)",
         "kerf_lbl": "Testere Payı (Kerf)", "rot_lbl": "Döndürme", "yes": "Serbest", "no": "Yasak",
         "pieces_lbl": "Ölçüler (Boy En Adet Kenar):",
@@ -177,7 +179,7 @@ TR = {
     "en": {
         "dir": "ltr", "title": "Abu Al-Qais - Woodwork Pro",
         "sub": "Cutting & Costing System | Tel: " + WORKSHOP_PHONE,
-        "tab_cut": "📐 Cutting", "tab_set": "⚙️ Prices & Currency", "tab_acc": "🔩 Hardware", "tab_tpl": "🧊 3D Templates",
+        "tab_cut": "📐 Cutting", "tab_set": "⚙️ Prices & Currency", "tab_acc": "🔩 Hardware", "tab_tpl": "🧊 3D Templates", "tab_led": "📒 Ledger & Offcuts", "tab_kar": "🎨 Kartela 75+75",
         "mat_lbl": "Material:", "sw_lbl": "Sheet Length (mm)", "sh_lbl": "Sheet Width (mm)",
         "kerf_lbl": "Saw Kerf (mm)", "rot_lbl": "Rotation", "yes": "Allowed", "no": "Forbidden",
         "pieces_lbl": "Dimensions (L W Qty Edges):",
@@ -255,11 +257,11 @@ def best_layout(pieces, sw, sh, kerf, rotate):
                 pw, ph = p["l"] + kerf, p["w"] + kerf
                 best = None
                 for b in bins:
-                    r = b.find(pw, ph, s, rotate)
+                    r = b.find(pw, ph, s, rotate and not p.get('no_rot', False))
                     if r and (best is None or r[0] < best[1][0]): best = (b, r)
                 if best is None:
                     b = MaxRectsBin(sw + kerf, sh + kerf)
-                    r = b.find(pw, ph, s, rotate)
+                    r = b.find(pw, ph, s, rotate and not p.get('no_rot', False))
                     if not r: raise ValueError("القطعة أكبر من اللوح")
                     bins.append(b)
                     best = (b, r)
@@ -404,8 +406,8 @@ def render_sheet_b64(b, idx, total, sw, sh, kerf):
             d.text((x0 + 5, y0 + 5), f"#{p['gi']} ({aw}x{ah})", font=get_font(11), fill=(0, 0, 0))
     return to_b64(img), waste
 
-def render_invoice_b64(mat, sw, sh, pieces_cnt, sheets_cnt, waste_pct, pvc_m, acc_cost, final_price, curr, ws_name="ABU AL-QAIS WOODWORK", ws_phone=WORKSHOP_PHONE, inv_mode="workshop"):
-    W, H = 750, 560
+def render_invoice_b64(mat, sw, sh, pieces_cnt, sheets_cnt, waste_pct, pvc_m, acc_cost, final_price, curr, ws_name="ABU AL-QAIS WOODWORK", ws_phone=WORKSHOP_PHONE, inv_mode="workshop", cust_name="", deposit=0.0):
+    W, H = 750, 610
     img = Image.new("RGB", (W, H), (255, 255, 255))
     d = ImageDraw.Draw(img)
     d.rectangle([0, 0, W, 100], fill=(30, 58, 138))
@@ -414,6 +416,7 @@ def render_invoice_b64(mat, sw, sh, pieces_cnt, sheets_cnt, waste_pct, pvc_m, ac
     d.text((W - 180, 35), datetime.now().strftime("%Y-%m-%d"), font=get_font(18), fill=(255, 255, 255))
     y = 125
     rows = [
+        ("Customer:", cust_name if cust_name else "-"),
         ("Material:", mat),
         ("Sheet Size:", f"{sw} x {sh} mm"),
         ("Total Pieces:", f"{pieces_cnt}"),
@@ -426,9 +429,13 @@ def render_invoice_b64(mat, sw, sh, pieces_cnt, sheets_cnt, waste_pct, pvc_m, ac
         d.text((430, y), str(val), font=get_font(18), fill=(17, 24, 39))
         d.line([35, y + 30, W - 35, y + 30], fill=(229, 231, 235), width=1)
         y += 46
-    d.rectangle([35, y + 12, W - 35, y + 76], fill=(243, 244, 246), outline=(30, 58, 138), width=2)
-    d.text((55, y + 32), "TOTAL PRICE:", font=get_font(22), fill=(30, 58, 138))
-    d.text((430, y + 30), f"{final_price:.1f} {curr}", font=get_font(26), fill=(220, 38, 38))
+    d.rectangle([35, y + 10, W - 35, y + 72], fill=(243, 244, 246), outline=(30, 58, 138), width=2)
+    d.text((55, y + 26), "TOTAL:", font=get_font(20), fill=(30, 58, 138))
+    rem = max(0.0, final_price - deposit)
+    if deposit > 0:
+        d.text((220, y + 26), f"{final_price:.1f} | Paid: {deposit:.1f} | Rem: {rem:.1f} {curr}", font=get_font(18), fill=(220, 38, 38))
+    else:
+        d.text((430, y + 24), f"{final_price:.1f} {curr}", font=get_font(24), fill=(220, 38, 38))
     return to_b64(img)
 
 # ============================ واجهة التطبيق الاحترافية ============================
@@ -684,6 +691,62 @@ HTML_TEMPLATE = """
         }
         window.addEventListener('DOMContentLoaded', () => { setTimeout(draw3D, 200); });
 
+        
+        function showKartela(type) {
+            document.getElementById('kar_colors_grid').style.display = type === 'colors' ? 'grid' : 'none';
+            document.getElementById('kar_cnc_grid').style.display = type === 'cnc' ? 'grid' : 'none';
+        }
+
+        function initKartela() {
+            const cGrid = document.getElementById('kar_colors_grid');
+            const cncGrid = document.getElementById('kar_cnc_grid');
+            if (!cGrid || !cncGrid || cGrid.children.length > 0) return;
+
+            const boardTypes = ['MDF 18mm', 'Suntalam 18mm', 'High Gloss', 'Akrilik', 'Lak MDF'];
+            const colorNames = [
+                'أبيض ثلجي', 'كريمي', 'بيج رملي', 'رمادي فاتح', 'أنثراسيت', 'أسود مطفي', 'جوز تركي', 'بلوط طبيعي', 'صنوبر', 'سنديان',
+                'ماهوجني', 'تييك', 'أزرق بترولي', 'أخضر زيتوني', 'تراكوتا'
+            ];
+            let cHtml = '';
+            for (let i = 0; i < 75; i++) {
+                const hue = (i * 29) % 360;
+                const sat = (i % 5 === 0) ? 8 : (35 + (i % 4) * 15);
+                const lig = 22 + ((i * 7) % 65);
+                const bg = `hsl(${hue}, ${sat}%, ${lig}%)`;
+                const bType = boardTypes[i % boardTypes.length];
+                const cName = colorNames[i % colorNames.length] + ' #' + (i + 1);
+                cHtml += `<div onclick="alert('تم اختيار: ${cName} (${bType})')" style="cursor:pointer; background:var(--inp-bg); border:1px solid var(--inp-brd); border-radius:8px; padding:6px; text-align:center; box-shadow:0 2px 5px rgba(0,0,0,0.06);">
+                    <div style="width:12px; height:12px; border-radius:50%; background:var(--bg-card); border:2px solid #94a3b8; margin:0 auto 5px;"></div>
+                    <div style="height:46px; border-radius:6px; background:${bg}; border:1px solid rgba(0,0,0,0.15);"></div>
+                    <div style="font-size:10px; font-weight:bold; margin-top:5px; line-height:1.2;">${cName}</div>
+                    <div style="font-size:9px; color:#64748b;">${bType}</div>
+                </div>`;
+            }
+            cGrid.innerHTML = cHtml;
+
+            let cncHtml = '';
+            for (let i = 1; i <= 75; i++) {
+                const mode = i % 6;
+                let inner = '';
+                if (mode === 0) inner = `<rect x="12" y="12" width="56" height="86" fill="none" stroke="#8d6e63" stroke-width="2"/><rect x="20" y="20" width="40" height="70" fill="none" stroke="#8d6e63" stroke-width="1.5"/>`;
+                else if (mode === 1) inner = `<path d="M14,98 L14,35 Q40,10 66,35 L66,98 Z" fill="none" stroke="#8d6e63" stroke-width="2"/>`;
+                else if (mode === 2) inner = `<line x1="15" y1="20" x2="65" y2="20" stroke="#8d6e63" stroke-width="2"/><line x1="15" y1="35" x2="65" y2="35" stroke="#8d6e63" stroke-width="2"/><line x1="15" y1="50" x2="65" y2="50" stroke="#8d6e63" stroke-width="2"/><line x1="15" y1="65" x2="65" y2="65" stroke="#8d6e63" stroke-width="2"/><line x1="15" y1="80" x2="65" y2="80" stroke="#8d6e63" stroke-width="2"/>`;
+                else if (mode === 3) inner = `<polygon points="40,15 65,55 40,95 15,55" fill="none" stroke="#8d6e63" stroke-width="2"/><rect x="12" y="12" width="56" height="86" fill="none" stroke="#8d6e63" stroke-width="1"/>`;
+                else if (mode === 4) inner = `<path d="M12,30 Q40,15 68,30 M12,55 Q40,40 68,55 M12,80 Q40,65 68,80" fill="none" stroke="#8d6e63" stroke-width="2"/>`;
+                else inner = `<rect x="14" y="14" width="22" height="36" fill="none" stroke="#8d6e63" stroke-width="1.8"/><rect x="44" y="14" width="22" height="36" fill="none" stroke="#8d6e63" stroke-width="1.8"/><rect x="14" y="58" width="52" height="36" fill="none" stroke="#8d6e63" stroke-width="1.8"/>`;
+
+                cncHtml += `<div onclick="alert('تصميم كاباك CNC-${i} جاهز للتنفيذ')" style="cursor:pointer; background:var(--inp-bg); border:1px solid var(--inp-brd); border-radius:8px; padding:6px; text-align:center;">
+                    <svg viewBox="0 0 80 110" style="width:100%; height:75px; background:#faf6f0; border-radius:4px; border:1px solid #d7ccc8;">
+                        <rect x="4" y="4" width="72" height="102" fill="none" stroke="#5d4037" stroke-width="2"/>
+                        ${inner}
+                    </svg>
+                    <div style="font-size:10px; font-weight:bold; margin-top:4px;">CNC-${i}</div>
+                </div>`;
+            }
+            cncGrid.innerHTML = cncHtml;
+        }
+        window.addEventListener('DOMContentLoaded', () => { setTimeout(initKartela, 300); });
+
         function setTheme(t) {
             document.body.className = t ? ('theme-' + t) : '';
             localStorage.setItem('aq_theme', t);
@@ -764,6 +827,8 @@ HTML_TEMPLATE = """
         <button type="button" class="tab-btn" onclick="openTab('tab2', this)">{{ t['tab_set'] }}</button>
         <button type="button" class="tab-btn" onclick="openTab('tab3', this)">{{ t['tab_acc'] }}</button>
         <button type="button" class="tab-btn" onclick="openTab('tab4', this)">{{ t['tab_tpl'] }}</button>
+        <button type="button" class="tab-btn" onclick="openTab('tab5', this)">{{ t['tab_led'] }}</button>
+        <button type="button" class="tab-btn" onclick="openTab('tab6', this)">{{ t['tab_kar'] }}</button>
     </div>
 
     <form method="POST" enctype="multipart/form-data">
@@ -791,7 +856,15 @@ HTML_TEMPLATE = """
             </div>
             <label>{{ t['pieces_lbl'] }}</label>
             <textarea id="pieces_box" name="pieces" rows="5" dir="ltr" lang="en" placeholder="{{ t['pieces_ph'] }}">{{ pieces_text }}</textarea>
+            <div style="margin:6px 0; font-size:12px; color:#64748b;">💡 نصيحة: أضف <b>G</b> بنهاية السطر لمنع التدوير (اتجاه العرق)، وأضف <b>2mm</b> للشريط السميك (مثال: <code>800 600 2 4 2mm G</code>)</div>
+            <label style="display:flex; align-items:center; gap:8px; font-weight:normal; cursor:pointer;">
+                <input type="checkbox" name="use_offcuts" value="1" checked style="width:auto;"> ♻️ استخدام البقايا المحفوظة تلقائياً قبل فتح لوح جديد
+            </label>
 
+            <div class="row">
+                <div><label>👤 اسم الزبون (اختياري):</label><input type="text" name="cust_name" value="{{ cust_name }}" placeholder="مثال: أحمد محمد"></div>
+                <div><label>💵 العربون المدفوع:</label><input type="text" inputmode="decimal" dir="ltr" name="deposit" value="{{ deposit }}"></div>
+            </div>
             <label>{{ t['ocr_lbl'] }}</label>
             <div class="ocr-btns">
                 <label for="cam_upload" class="ocr-btn">{{ t['cam_btn'] }}</label>
@@ -820,7 +893,8 @@ HTML_TEMPLATE = """
             </div>
             <div class="row">
                 <div><label>{{ t['p_sheet'] }}</label><input type="text" inputmode="numeric" dir="ltr" lang="en" name="p_sheet" value="650"></div>
-                <div><label>{{ t['p_pvc'] }}</label><input type="text" inputmode="numeric" dir="ltr" lang="en" name="p_pvc" value="15"></div>
+                <div><label>شريط PVC 0.4mm (TL)</label><input type="text" inputmode="numeric" dir="ltr" lang="en" name="p_pvc" value="12"></div>
+                <div><label>شريط PVC 2mm (TL)</label><input type="text" inputmode="numeric" dir="ltr" lang="en" name="p_pvc2" value="25"></div>
             </div>
             <label>{{ t['p_cut'] }}</label><input type="text" inputmode="numeric" dir="ltr" lang="en" name="p_cut" value="100">
             <hr style="margin:14px 0; border:0; border-top:1px solid var(--inp-brd);">
@@ -902,6 +976,47 @@ HTML_TEMPLATE = """
             <button type="button" onclick="applyTemplate()" style="width:100%; padding:12px; background:#f59e0b; color:#fff; border:none; border-radius:8px; font-weight:bold; font-size:15px; cursor:pointer;">📥 توليد المقاسات وإضافتها للتقطيع</button>
         </div>
 
+        
+        <div id="tab5" class="tab-content">
+            <h4 style="margin:6px 0;">♻️ بقايا الألواح الكبيرة (المخزون / Fire):</h4>
+            {% if offcuts %}
+                <div style="max-height:160px; overflow-y:auto; border:1px solid var(--inp-brd); border-radius:8px; padding:8px; background:var(--inp-bg); font-size:13px;">
+                {% for o in offcuts %}
+                    <div style="display:flex; justify-content:space-between; padding:4px 0; border-bottom:1px dashed var(--inp-brd);">
+                        <span>🪵 {{ o.mat }} | <b>{{ o.w }} × {{ o.h }} مم</b></span>
+                        <span style="color:#64748b;">{{ o.date }}</span>
+                    </div>
+                {% endfor %}
+                </div>
+            {% else %}
+                <p style="font-size:13px; color:#64748b;">لا توجد بقايا محفوظة حالياً. تُحفظ البقايا أكبر من 500×500 مم تلقائياً بعد كل تقطيع.</p>
+            {% endif %}
+
+            <h4 style="margin:14px 0 6px;">📒 دفتر الورشة (أرشيف الزبائن):</h4>
+            {% if ledger %}
+                <div style="max-height:220px; overflow-y:auto; border:1px solid var(--inp-brd); border-radius:8px; padding:8px; background:var(--inp-bg); font-size:13px;">
+                {% for l in ledger %}
+                    <div style="padding:6px 0; border-bottom:1px dashed var(--inp-brd);">
+                        <div><b>👤 {{ l.cust }}</b> ({{ l.date }}) - {{ l.mat }}</div>
+                        <div style="color:#059669;">الإجمالي: {{ l.total }} {{ l.curr }} | العربون: {{ l.dep }} | <b>المتبقي: {{ l.rem }} {{ l.curr }}</b></div>
+                    </div>
+                {% endfor %}
+                </div>
+            {% else %}
+                <p style="font-size:13px; color:#64748b;">لا توجد طلبيات مسجلة في الدفتر بعد.</p>
+            {% endif %}
+        </div>
+
+        
+        <div id="tab6" class="tab-content">
+            <div style="display:flex; gap:8px; margin-bottom:12px;">
+                <button type="button" onclick="showKartela('colors')" style="flex:1; padding:10px; border:none; border-radius:8px; background:#2563eb; color:#fff; font-weight:bold; cursor:pointer;">🎨 قارتيلا الألوان (75 لون)</button>
+                <button type="button" onclick="showKartela('cnc')" style="flex:1; padding:10px; border:none; border-radius:8px; background:#b45309; color:#fff; font-weight:bold; cursor:pointer;">🚪 قارتيلا كاباك CNC (75 تصميم)</button>
+            </div>
+            <div id="kar_colors_grid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(90px, 1fr)); gap:10px; max-height:420px; overflow-y:auto; padding:6px;"></div>
+            <div id="kar_cnc_grid" style="display:none; grid-template-columns:repeat(auto-fill, minmax(95px, 1fr)); gap:10px; max-height:420px; overflow-y:auto; padding:6px;"></div>
+        </div>
+
         <button type="submit" class="submit-btn">{{ t['btn_calc'] }}</button>
     </form>
     {% endif %}
@@ -915,6 +1030,10 @@ HTML_TEMPLATE = """
         <a href="/download/{{ invoice_id }}" class="dl-btn">{{ t['dl_btn'] }}</a>
         <a href="https://wa.me/?text={{ wa_text }}" target="_blank" class="dl-btn" style="background:#25D366;">📲 إرسال عبر واتساب</a>
         <button type="button" onclick="window.print()" class="dl-btn" style="background:#64748b; border:none; cursor:pointer;">🏷️ طباعة ملصقات القص (Etiket)</button>
+        <a href="/saw/{{ order_id }}" target="_blank" class="dl-btn" style="background:#f59e0b;">🪚 رابط عامل المنشار (بدون أسعار)</a>
+        <a href="/export_csv/{{ order_id }}" class="dl-btn" style="background:#0f766e;">📊 تصدير CSV لماكينة القص (CNC)</a>
+        <a href="/invoice_pdf/{{ order_id }}" class="dl-btn" style="background:#dc2626;">📄 تحميل الفاتورة PDF</a>
+        <a href="/etiket/{{ order_id }}" target="_blank" class="dl-btn" style="background:#7c3aed;">🏷️ صفحة ملصقات (Etiket)</a>
 
         <h3>{{ t['sheets_title'] }} ({{ sheets_cnt }})</h3>
         {% for s in sheets %}
@@ -937,6 +1056,70 @@ def cache_img(b64_str, fname):
     img_id = "".join(random.choices(string.ascii_lowercase + string.digits, k=10))
     IMG_CACHE[img_id] = (b64_str, fname)
     return img_id
+
+
+SAW_CACHE = {}
+CSV_CACHE = {}
+
+@app.route("/saw/<oid>", methods=["GET"])
+def saw_view(oid):
+    data = SAW_CACHE.get(oid)
+    if not data:
+        return "انتهت صلاحية رابط عامل المنشار.", 404
+    imgs_html = "".join(f'<img src="/download/{sid}" style="width:100%; margin-top:12px; border:1px solid #ccc; border-radius:8px;">' for sid in data["sheet_ids"])
+    return f"""<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>أمر قص - عامل المنشار</title></head>
+    <body style="font-family:Tahoma,Arial; padding:14px; background:#f8fafc; max-width:650px; margin:auto;">
+    <h2 style="color:#1e3a8a;">🪚 أمر قص لعامل المنشار ({data['mat']})</h2>
+    <pre style="background:#fff; padding:12px; border-radius:8px; border:1px solid #cbd5e1; white-space:pre-wrap; font-size:14px; direction:rtl;">{data['summary']}</pre>
+    {imgs_html}
+    </body></html>"""
+
+@app.route("/export_csv/<oid>", methods=["GET"])
+def export_csv(oid):
+    csv_txt = CSV_CACHE.get(oid)
+    if not csv_txt:
+        return "انتهت صلاحية ملف CSV.", 404
+    resp = make_response(csv_txt.encode("utf-8-sig"))
+    resp.headers["Content-Type"] = "text/csv; charset=utf-8"
+    resp.headers["Content-Disposition"] = f"attachment; filename=cut_list_{oid}.csv"
+    return resp
+
+
+ETIKET_CACHE = {}
+
+@app.route("/invoice_pdf/<oid>", methods=["GET"])
+def invoice_pdf(oid):
+    data = SAW_CACHE.get(oid)
+    if not data or not data.get("inv_id"):
+        return "انتهت صلاحية الفاتورة.", 404
+    item = IMG_CACHE.get(data["inv_id"])
+    if not item:
+        return "انتهت صلاحية الفاتورة.", 404
+    im = Image.open(io.BytesIO(base64.b64decode(item[0]))).convert("RGB")
+    buf = io.BytesIO()
+    im.save(buf, format="PDF", resolution=100.0)
+    resp = make_response(buf.getvalue())
+    resp.headers["Content-Type"] = "application/pdf"
+    resp.headers["Content-Disposition"] = f"attachment; filename=invoice_{oid}.pdf"
+    return resp
+
+@app.route("/etiket/<oid>", methods=["GET"])
+def etiket_view(oid):
+    cards = ETIKET_CACHE.get(oid)
+    if not cards:
+        return "انتهت صلاحية الملصقات.", 404
+    cards_html = ""
+    for c in cards:
+        cards_html += f"""<div style="border:2px solid #1e293b; border-radius:8px; padding:10px; width:210px; display:inline-block; margin:6px; font-family:Tahoma,Arial; background:#fff; page-break-inside:avoid;">
+            <div style="font-weight:bold; font-size:15px; border-bottom:1px solid #cbd5e1; padding-bottom:4px;">#{c['gi']} | {c['l']} × {c['w']} مم</div>
+            <div style="font-size:12px; margin-top:4px;">الكمية: <b>{c['qty']}</b> | {c['mat']}</div>
+            <div style="font-size:12px;">شريط: طول({c['le']}) عرض({c['we']}) [{c['thick']}mm]</div>
+            <div style="font-size:11px; color:#475569; margin-top:3px;">الزبون: {c['cust']}</div>
+        </div>"""
+    return f"""<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><title>ملصقات القص - Etiket</title></head>
+    <body style="background:#f1f5f9; padding:12px;">
+    <button onclick="window.print()" style="padding:10px 20px; background:#2563eb; color:#fff; border:none; border-radius:6px; font-weight:bold; cursor:pointer; margin-bottom:12px;">🖨️ طباعة الملصقات</button>
+    <div>{cards_html}</div></body></html>"""
 
 @app.route("/health", methods=["GET"])
 def health():
@@ -971,9 +1154,13 @@ def home():
     is_pro = request.cookies.get("is_pro") == "1"
     trial_used = request.cookies.get("trial_used") == "1"
 
+    st_view = load_store()
     ctx = {
         "lang": lang, "t": TR[lang], "iban": IBAN_INFO, "price": PRO_PRICE,
         "ws_name": WORKSHOP_NAME, "ws_phone": WORKSHOP_PHONE, "inv_mode": "workshop",
+        "cust_name": "", "deposit": "0", "order_id": "",
+        "offcuts": list(reversed(st_view.get("offcuts", [])))[:20],
+        "ledger": list(reversed(st_view.get("ledger", [])))[:25],
         "sw": 2800, "sh": 2100, "kerf": 4, "pieces_text": "", "wa_text": "",
         "paywall": False, "error": None, "invoice": None, "sheets": []
     }
@@ -1010,7 +1197,10 @@ def home():
                     l, w = int(float(tokens[0])), int(float(tokens[1]))
                     qty = int(tokens[2]) if len(tokens) > 2 and tokens[2].isdigit() else 1
                     le, we = parse_edges(tokens[3]) if len(tokens) > 3 else (0, 0)
-                    groups.append({"l": l, "w": w, "qty": qty, "le": le, "we": we, "gi": len(groups) + 1})
+                    up_line = line.upper()
+                    no_rot = (" G" in up_line or up_line.endswith("G") or "عرق" in line)
+                    thick = "2" if "2MM" in up_line else "0.4"
+                    groups.append({"l": l, "w": w, "qty": qty, "le": le, "we": we, "gi": len(groups) + 1, "no_rot": no_rot, "thick": thick})
 
             if not groups:
                 raise ValueError("أدخل مقاساً واحداً على الأقل")
@@ -1049,7 +1239,10 @@ def home():
             from urllib.parse import quote
             wa_msg = f"🪵 {ws_name}\nالمادة: {mat}\nالألواح: {total_sheets}\nالسعر الإجمالي: {final_price:.1f} {curr}\nللتواصل: {ws_phone}"
             ctx["wa_text"] = quote(wa_msg)
-            inv_b64 = render_invoice_b64(mat, sw, sh, len(pieces), total_sheets, waste_pct, pvc_m, acc_disp, final_price, curr, ws_name, ws_phone, inv_mode)
+            cust_name = request.form.get("cust_name", "").strip()
+            deposit = float(normalize_digits(request.form.get("deposit", "0") or "0"))
+            ctx.update({"cust_name": cust_name, "deposit": str(deposit)})
+            inv_b64 = render_invoice_b64(mat, sw, sh, len(pieces), total_sheets, waste_pct, pvc_m, acc_disp, final_price, curr, ws_name, ws_phone, inv_mode, cust_name, deposit)
             ctx["invoice"] = inv_b64
             ctx["invoice_id"] = cache_img(inv_b64, "invoice.png")
             ctx["sheets_cnt"] = total_sheets
@@ -1058,6 +1251,33 @@ def home():
                 sb64 = render_sheet_b64(b, i + 1, total_sheets, sw, sh, kerf)[0]
                 sheets_list.append({"b64": sb64, "id": cache_img(sb64, f"sheet_{i+1}.png")})
             ctx["sheets"] = sheets_list
+            oid = "".join(random.choices(string.ascii_lowercase + string.digits, k=8))
+            ctx["order_id"] = oid
+            SAW_CACHE[oid] = {"mat": mat, "summary": build_cut_summary(groups), "sheet_ids": [x["id"] for x in sheets_list], "inv_id": ctx["invoice_id"]}
+            ETIKET_CACHE[oid] = [{"gi": g["gi"], "l": g["l"], "w": g["w"], "qty": g["qty"], "le": g["le"], "we": g["we"], "thick": g["thick"], "mat": mat, "cust": cust_name or "-"} for g in groups]
+            csv_lines = ["Group,Length_mm,Width_mm,Qty,Edge_Length,Edge_Width"]
+            for g in groups:
+                csv_lines.append(f"{g['gi']},{g['l']},{g['w']},{g['qty']},{g['le']},{g['we']}")
+            CSV_CACHE[oid] = "\n".join(csv_lines)
+
+            # حفظ البقايا الكبيرة (> 500x500) ودفتر الورشة
+            st_save = load_store()
+            today_str = datetime.now().strftime("%Y-%m-%d")
+            for _, _, fw, fh in bins[-1].free:
+                aw_f, ah_f = fw - kerf, fh - kerf
+                if aw_f >= 500 and ah_f >= 500:
+                    st_save.setdefault("offcuts", []).append({"mat": mat, "w": aw_f, "h": ah_f, "date": today_str})
+            st_save["offcuts"] = st_save.get("offcuts", [])[-30:]
+            if cust_name or deposit > 0:
+                rem_val = max(0.0, final_price - deposit)
+                st_save.setdefault("ledger", []).append({
+                    "cust": cust_name or "زبون نقدي", "mat": mat, "date": today_str,
+                    "total": f"{final_price:.1f}", "dep": f"{deposit:.1f}", "rem": f"{rem_val:.1f}", "curr": curr
+                })
+                st_save["ledger"] = st_save.get("ledger", [])[-50:]
+            save_store(st_save)
+            ctx["offcuts"] = list(reversed(st_save.get("offcuts", [])))[:20]
+            ctx["ledger"] = list(reversed(st_save.get("ledger", [])))[:25]
 
             resp = make_response(render_template_string(HTML_TEMPLATE, **ctx))
             resp.set_cookie("trial_used", "1", max_age=365*86400)
@@ -1436,7 +1656,16 @@ def telegram_webhook():
             u_info = st["tg_users"].get(str(chat_id), {})
             now_ts = int(time.time())
             is_tg_pro = u_info.get("pro_until", 0) > now_ts
-            if not is_tg_pro:
+            if is_tg_pro:
+                rem_sec = u_info.get("pro_until", 0) - now_ts
+                if 0 < rem_sec <= 3 * 86400 and not u_info.get("reminded"):
+                    days_left = max(1, int(rem_sec // 86400))
+                    sc = u_info.get("sheets_calc", 0)
+                    ic = u_info.get("invoices_cnt", 0)
+                    tg_send_msg(chat_id, f"⏳ تنبيه: اشتراكك ينتهي خلال {days_left} يوم!\n📊 أنجزت هذا الشهر: {sc} لوح و {ic} فاتورة.\nجدد اشتراكك الآن لضمان استمرار عمل ورشتك.")
+                    u_info["reminded"] = True
+                    save_store(st)
+            else:
                 if u_info.get("trial_used"):
                     tg_send_msg(chat_id, f"🔒 انتهت تجربتك المجانية!\nللاستمرار يرجى الاشتراك ({PRO_PRICE}) عبر الآيبان:\n{IBAN_INFO}\nثم أرسل كود التفعيل هكذا: `/activate الكود`")
                     return "OK", 200
