@@ -679,12 +679,12 @@ HTML_TEMPLATE = """
     <div class="result-box">
         <h3>{{ t['inv_title'] }}</h3>
         <img src="data:image/png;base64,{{ invoice }}">
-        <a href="data:image/png;base64,{{ invoice }}" download="invoice.png" class="dl-btn">{{ t['dl_btn'] }}</a>
+        <a href="/download/{{ invoice_id }}" class="dl-btn">{{ t['dl_btn'] }}</a>
 
         <h3>{{ t['sheets_title'] }} ({{ sheets_cnt }})</h3>
         {% for s in sheets %}
-        <img src="data:image/png;base64,{{ s }}">
-        <a href="data:image/png;base64,{{ s }}" download="sheet_{{ loop.index }}.png" class="dl-btn">{{ t['dl_btn'] }} #{{ loop.index }}</a>
+        <img src="data:image/png;base64,{{ s.b64 }}">
+        <a href="/download/{{ s.id }}" class="dl-btn">{{ t['dl_btn'] }} #{{ loop.index }}</a>
         {% endfor %}
     </div>
     {% endif %}
@@ -693,9 +693,30 @@ HTML_TEMPLATE = """
 </html>
 """
 
+
+IMG_CACHE = {}
+
+def cache_img(b64_str, fname):
+    if len(IMG_CACHE) > 60:
+        IMG_CACHE.clear()
+    img_id = "".join(random.choices(string.ascii_lowercase + string.digits, k=10))
+    IMG_CACHE[img_id] = (b64_str, fname)
+    return img_id
+
 @app.route("/health", methods=["GET"])
 def health():
     return "OK", 200
+
+@app.route("/download/<img_id>", methods=["GET"])
+def download_img(img_id):
+    item = IMG_CACHE.get(img_id)
+    if not item:
+        return "انتهت صلاحية الصورة، يرجى الضغط على احسب التقطيع مرة أخرى.", 404
+    b64_str, fname = item
+    resp = make_response(base64.b64decode(b64_str))
+    resp.headers["Content-Type"] = "image/png"
+    resp.headers["Content-Disposition"] = f"attachment; filename={fname}"
+    return resp
 
 @app.route("/ocr", methods=["POST"])
 def ocr_endpoint():
@@ -785,9 +806,15 @@ def home():
             else:
                 final_price, acc_disp = total_tl, acc_tl
 
-            ctx["invoice"] = render_invoice_b64(mat, sw, sh, len(pieces), total_sheets, waste_pct, pvc_m, acc_disp, final_price, curr)
+            inv_b64 = render_invoice_b64(mat, sw, sh, len(pieces), total_sheets, waste_pct, pvc_m, acc_disp, final_price, curr)
+            ctx["invoice"] = inv_b64
+            ctx["invoice_id"] = cache_img(inv_b64, "invoice.png")
             ctx["sheets_cnt"] = total_sheets
-            ctx["sheets"] = [render_sheet_b64(b, i + 1, total_sheets, sw, sh, kerf)[0] for i, b in enumerate(bins)]
+            sheets_list = []
+            for i, b in enumerate(bins):
+                sb64 = render_sheet_b64(b, i + 1, total_sheets, sw, sh, kerf)[0]
+                sheets_list.append({"b64": sb64, "id": cache_img(sb64, f"sheet_{i+1}.png")})
+            ctx["sheets"] = sheets_list
 
             resp = make_response(render_template_string(HTML_TEMPLATE, **ctx))
             resp.set_cookie("trial_used", "1", max_age=365*86400)
