@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 import time
+import threading
 import re
 import io
 import base64
@@ -219,17 +220,30 @@ def ocr_image_ai(img_bytes):
         "X-Title": "Abu Al-Qais Woodwork"
     }
 
-    # قائمة نماذج مجانية تدعم قراءة الصور مع التبديل التلقائي عند الضغط
-    free_models = [
-        "google/gemma-3-27b-it:free",
-        "qwen/qwen2.5-vl-32b-instruct:free",
-        "mistralai/mistral-small-3.1-24b-instruct:free",
-        "nvidia/nemotron-nano-12b-v2-vl:free",
-        "openrouter/free"
-    ]
+    # جلب أحدث النماذج المجانية التي تدعم الصور تلقائياً من OpenRouter لتجنب خطأ 404
+    free_models = []
+    try:
+        m_res = requests.get("https://openrouter.ai/api/v1/models", timeout=15)
+        if m_res.status_code == 200:
+            for m in m_res.json().get("data", []):
+                mid = m.get("id", "")
+                arch = m.get("architecture") or {}
+                mods = arch.get("input_modalities") or []
+                if mid.endswith(":free") and ("image" in mods or "image" in str(arch.get("modality", "")).lower()):
+                    free_models.append(mid)
+    except Exception:
+        pass
+
+    if not free_models:
+        free_models = [
+            "google/gemma-3-27b-it:free",
+            "qwen/qwen2.5-vl-32b-instruct:free",
+            "mistralai/mistral-small-3.1-24b-instruct:free",
+            "nvidia/nemotron-nano-12b-v2-vl:free",
+        ]
 
     last_err = ""
-    for model in free_models:
+    for model in free_models[:6]:
         payload = {
             "model": model,
             "messages": [{
@@ -253,9 +267,9 @@ def ocr_image_ai(img_bytes):
                 text = data["choices"][0]["message"]["content"].strip()
                 if text:
                     return text
-            last_err = f"({res.status_code}): {res.text[:150]}"
+            last_err = f"({res.status_code}) [{model}]: {res.text[:120]}"
         except Exception as e:
-            last_err = str(e)
+            last_err = f"[{model}]: {e}"
 
     raise ValueError(f"تعذر القراءة من OpenRouter {last_err}")
 
@@ -816,7 +830,13 @@ def telegram_webhook():
             if not file_bytes:
                 raise ValueError("تعذر تحميل الملف من تليجرام")
             github_upload_file(fname, file_bytes, f"Update {fname} via Telegram Bot")
-            tg_send_msg(chat_id, f"✅ تم رفع `{fname}` إلى GitHub بنجاح!\nسيقوم Render بتحديث السيرفر تلقائياً خلال دقيقة واحدة.")
+            tg_send_msg(chat_id, f"✅ تم رفع `{fname}` إلى GitHub بنجاح!\n⏳ جاري تحديث السيرفر على Render، سأرسل لك إشعاراً بعد دقيقة عند الجاهزية.")
+            
+            def notify_ready(cid, fn):
+                time.sleep(65)
+                tg_send_msg(cid, f"🚀 تم تحديث السيرفر بالملف `{fn}` بنجاح! يمكنك استخدام البوت الآن.")
+            
+            threading.Thread(target=notify_ready, args=(chat_id, fname), daemon=True).start()
             return "OK", 200
 
         pieces_text = ""
