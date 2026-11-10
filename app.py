@@ -129,7 +129,7 @@ TR = {
     "ar": {
         "dir": "rtl", "title": "أبو القيس - نظام النجارة المتكامل",
         "sub": "نظام تقطيع الأخشاب والتسعير | هاتف: " + WORKSHOP_PHONE,
-        "tab_cut": "📐 التقطيع والطلب", "tab_set": "⚙️ الأسعار والعملات", "tab_acc": "🔩 الإكسسوارات",
+        "tab_cut": "📐 التقطيع والطلب", "tab_set": "⚙️ الأسعار والعملات", "tab_acc": "🔩 الإكسسوارات", "tab_tpl": "🧊 قوالب 3D",
         "mat_lbl": "نوع الخشب:", "sw_lbl": "طول اللوح (مم)", "sh_lbl": "عرض اللوح (مم)",
         "kerf_lbl": "سمك المنشار (Kerf)", "rot_lbl": "تدوير القطع", "yes": "مسموح", "no": "ممنوع",
         "pieces_lbl": "المقاسات (الطول العرض العدد الحواف):",
@@ -153,7 +153,7 @@ TR = {
     "tr": {
         "dir": "ltr", "title": "Abu Al-Qais - Kesim Optimizasyon",
         "sub": "Ahşap Kesim ve Maliyet Sistemi | Tel: " + WORKSHOP_PHONE,
-        "tab_cut": "📐 Kesim & Sipariş", "tab_set": "⚙️ Fiyat & Döviz", "tab_acc": "🔩 Aksesuar",
+        "tab_cut": "📐 Kesim & Sipariş", "tab_set": "⚙️ Fiyat & Döviz", "tab_acc": "🔩 Aksesuar", "tab_tpl": "🧊 3D Şablonlar",
         "mat_lbl": "Malzeme Türü:", "sw_lbl": "Plaka Boyu (mm)", "sh_lbl": "Plaka Eni (mm)",
         "kerf_lbl": "Testere Payı (Kerf)", "rot_lbl": "Döndürme", "yes": "Serbest", "no": "Yasak",
         "pieces_lbl": "Ölçüler (Boy En Adet Kenar):",
@@ -177,7 +177,7 @@ TR = {
     "en": {
         "dir": "ltr", "title": "Abu Al-Qais - Woodwork Pro",
         "sub": "Cutting & Costing System | Tel: " + WORKSHOP_PHONE,
-        "tab_cut": "📐 Cutting", "tab_set": "⚙️ Prices & Currency", "tab_acc": "🔩 Hardware",
+        "tab_cut": "📐 Cutting", "tab_set": "⚙️ Prices & Currency", "tab_acc": "🔩 Hardware", "tab_tpl": "🧊 3D Templates",
         "mat_lbl": "Material:", "sw_lbl": "Sheet Length (mm)", "sh_lbl": "Sheet Width (mm)",
         "kerf_lbl": "Saw Kerf (mm)", "rot_lbl": "Rotation", "yes": "Allowed", "no": "Forbidden",
         "pieces_lbl": "Dimensions (L W Qty Edges):",
@@ -404,20 +404,20 @@ def render_sheet_b64(b, idx, total, sw, sh, kerf):
             d.text((x0 + 5, y0 + 5), f"#{p['gi']} ({aw}x{ah})", font=get_font(11), fill=(0, 0, 0))
     return to_b64(img), waste
 
-def render_invoice_b64(mat, sw, sh, pieces_cnt, sheets_cnt, waste_pct, pvc_m, acc_cost, final_price, curr):
+def render_invoice_b64(mat, sw, sh, pieces_cnt, sheets_cnt, waste_pct, pvc_m, acc_cost, final_price, curr, ws_name="ABU AL-QAIS WOODWORK", ws_phone=WORKSHOP_PHONE, inv_mode="workshop"):
     W, H = 750, 560
     img = Image.new("RGB", (W, H), (255, 255, 255))
     d = ImageDraw.Draw(img)
     d.rectangle([0, 0, W, 100], fill=(30, 58, 138))
-    d.text((25, 20), "ABU AL-QAIS WOODWORK", font=get_font(26), fill=(255, 255, 255))
-    d.text((25, 58), f"Tel: {WORKSHOP_PHONE}", font=get_font(16), fill=(219, 234, 254))
+    d.text((25, 20), str(ws_name)[:28], font=get_font(26), fill=(255, 255, 255))
+    d.text((25, 58), f"Tel: {ws_phone}", font=get_font(16), fill=(219, 234, 254))
     d.text((W - 180, 35), datetime.now().strftime("%Y-%m-%d"), font=get_font(18), fill=(255, 255, 255))
     y = 125
     rows = [
         ("Material:", mat),
         ("Sheet Size:", f"{sw} x {sh} mm"),
         ("Total Pieces:", f"{pieces_cnt}"),
-        ("Sheets Needed:", f"{sheets_cnt} (Waste: {waste_pct:.1f}%)"),
+        ("Sheets Needed:", f"{sheets_cnt}" if inv_mode == "customer" else f"{sheets_cnt} (Waste: {waste_pct:.1f}%)"),
         ("PVC Edge Banding:", f"{pvc_m:.1f} m"),
         ("Hardware / Aksesuar:", f"{acc_cost:.1f} {curr}"),
     ]
@@ -517,6 +517,148 @@ HTML_TEMPLATE = """
         .error { background: #fee2e2; color: #991b1b; padding: 10px; border-radius: 8px; margin-top: 10px; font-size: 14px; }
     </style>
     <script>
+        
+        let angle3D = 35;
+        function rot3D(deg) { angle3D += deg; draw3D(); }
+
+        const TPL_DEFAULTS = {
+            wardrobe2: [2000, 1000, 600], wardrobe3: [2100, 1500, 600], wardrobe_slide: [2200, 1800, 650],
+            shoe_cab: [1100, 800, 350], bookcase: [1800, 800, 320],
+            kit_base: [720, 800, 560], kit_wall: [720, 800, 320], kit_drawers: [720, 600, 560], kit_tall: [2100, 600, 580],
+            nightstand: [500, 450, 400], chiffonier: [900, 800, 450], dresser: [780, 1100, 450],
+            bed_single: [400, 950, 1950], bed_double: [400, 1650, 2050],
+            table_dining: [750, 1400, 800], table_coffee: [450, 1000, 600], desk_office: [750, 1200, 600],
+            tv_unit: [500, 1600, 400], chair_simple: [850, 450, 450], bench_storage: [450, 1000, 400], storage_box: [450, 800, 400]
+        };
+
+        function onTplChange() {
+            const k = document.getElementById('tpl_select').value;
+            const d = TPL_DEFAULTS[k] || [1000, 800, 500];
+            document.getElementById('tpl_h').value = d[0];
+            document.getElementById('tpl_w').value = d[1];
+            document.getElementById('tpl_d').value = d[2];
+            draw3D();
+        }
+
+        function proj3D(x, y, z, rad, cx, cy, sc) {
+            const rx = x * Math.cos(rad) - z * Math.sin(rad);
+            const rz = x * Math.sin(rad) + z * Math.cos(rad);
+            const px = cx + rx * sc;
+            const py = cy - y * sc + rz * 0.38 * sc;
+            return [px, py];
+        }
+
+        function draw3D() {
+            const c = document.getElementById('canvas3d');
+            if (!c) return;
+            const ctx = c.getContext('2d');
+            ctx.clearRect(0, 0, c.width, c.height);
+            const H = parseFloat(document.getElementById('tpl_h').value) || 1000;
+            const W = parseFloat(document.getElementById('tpl_w').value) || 800;
+            const D = parseFloat(document.getElementById('tpl_d').value) || 500;
+            const maxDim = Math.max(H, W, D, 1);
+            const sc = 135 / maxDim;
+            const rad = angle3D * Math.PI / 180;
+            const cx = c.width / 2, cy = c.height / 2 + (H * sc) * 0.35;
+
+            const pts = [
+                [-W/2, 0, -D/2], [W/2, 0, -D/2], [W/2, H, -D/2], [-W/2, H, -D/2],
+                [-W/2, 0,  D/2], [W/2, 0,  D/2], [W/2, H,  D/2], [-W/2, H,  D/2]
+            ].map(p => proj3D(p[0], p[1], p[2], rad, cx, cy, sc));
+
+            ctx.strokeStyle = '#2563eb';
+            ctx.lineWidth = 2;
+            const edges = [[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]];
+            edges.forEach(e => {
+                ctx.beginPath();
+                ctx.moveTo(pts[e[0]][0], pts[e[0]][1]);
+                ctx.lineTo(pts[e[1]][0], pts[e[1]][1]);
+                ctx.stroke();
+            });
+
+            // Draw front detail (doors/shelves)
+            const k = document.getElementById('tpl_select').value;
+            ctx.strokeStyle = '#f59e0b';
+            ctx.lineWidth = 1.5;
+            if (k.includes('wardrobe') || k.includes('kit_base') || k.includes('kit_wall') || k === 'shoe_cab') {
+                const m1 = proj3D(0, 0, D/2, rad, cx, cy, sc);
+                const m2 = proj3D(0, H, D/2, rad, cx, cy, sc);
+                ctx.beginPath(); ctx.moveTo(m1[0], m1[1]); ctx.lineTo(m2[0], m2[1]); ctx.stroke();
+            } else if (k.includes('drawer') || k === 'chiffonier' || k === 'nightstand') {
+                const rows = k === 'nightstand' ? 2 : 3;
+                for (let i = 1; i < rows; i++) {
+                    const y = (H / rows) * i;
+                    const p1 = proj3D(-W/2, y, D/2, rad, cx, cy, sc);
+                    const p2 = proj3D(W/2, y, D/2, rad, cx, cy, sc);
+                    ctx.beginPath(); ctx.moveTo(p1[0], p1[1]); ctx.lineTo(p2[0], p2[1]); ctx.stroke();
+                }
+            }
+            ctx.fillStyle = '#64748b';
+            ctx.font = 'bold 12px Tahoma';
+            ctx.fillText(`${W} × ${H} × ${D} mm`, 10, 18);
+        }
+
+        function applyTemplate() {
+            const k = document.getElementById('tpl_select').value;
+            const H = parseInt(document.getElementById('tpl_h').value) || 1000;
+            const W = parseInt(document.getElementById('tpl_w').value) || 800;
+            const D = parseInt(document.getElementById('tpl_d').value) || 500;
+            const T = 18;
+            const iw = W - 2 * T;
+            let lines = [];
+
+            if (k === 'wardrobe2' || k === 'kit_base' || k === 'kit_wall' || k === 'shoe_cab') {
+                lines = [
+                    `${H} ${D} 2 1`,
+                    `${iw} ${D} 2 1`,
+                    `${iw} ${D-20} 2 1`,
+                    `${H-4} ${Math.floor(W/2)-3} 2 4`
+                ];
+            } else if (k === 'wardrobe3' || k === 'wardrobe_slide') {
+                lines = [
+                    `${H} ${D} 2 1`,
+                    `${iw} ${D} 2 1`,
+                    `${H-2*T} ${D-20} 1 1`,
+                    `${Math.floor(iw/2)} ${D-20} 4 1`,
+                    `${H-4} ${Math.floor(W/3)-3} 3 4`
+                ];
+            } else if (k === 'bookcase') {
+                lines = [`${H} ${D} 2 1`, `${iw} ${D} 5 1`];
+            } else if (k === 'nightstand' || k === 'chiffonier' || k === 'kit_drawers') {
+                const dc = k === 'nightstand' ? 2 : (k === 'kit_drawers' ? 3 : 4);
+                const dh = Math.floor((H - 2*T) / dc) - 4;
+                lines = [
+                    `${H} ${D} 2 1`,
+                    `${iw} ${D} 2 1`,
+                    `${dh} ${W-4} ${dc} 4`,
+                    `${D-50} 140 ${dc*2} 1`,
+                    `${iw-60} 140 ${dc*2} 1`
+                ];
+            } else if (k.includes('table') || k === 'desk_office') {
+                lines = [
+                    `${W} ${D} 1 4`,
+                    `${H-T} ${D-40} 2 2`,
+                    `${W-100} 120 2 1`
+                ];
+            } else if (k === 'storage_box' || k === 'bench_storage') {
+                lines = [
+                    `${W} ${D} 2 4`,
+                    `${H-2*T} ${W} 2 2`,
+                    `${H-2*T} ${D-2*T} 2 2`
+                ];
+            } else {
+                lines = [
+                    `${H} ${D} 2 1`,
+                    `${iw} ${D} 2 1`,
+                    `${iw} ${H-2*T} 1 0`
+                ];
+            }
+            const box = document.getElementById('pieces_box');
+            box.value = (box.value.trim() ? box.value.trim() + '\n' : '') + lines.join('\n');
+            openTab('tab1', document.querySelector('.tab-btn'));
+        }
+        window.addEventListener('DOMContentLoaded', () => { setTimeout(draw3D, 200); });
+
         function setTheme(t) {
             document.body.className = t ? ('theme-' + t) : '';
             localStorage.setItem('aq_theme', t);
@@ -596,6 +738,7 @@ HTML_TEMPLATE = """
         <button type="button" class="tab-btn active" onclick="openTab('tab1', this)">{{ t['tab_cut'] }}</button>
         <button type="button" class="tab-btn" onclick="openTab('tab2', this)">{{ t['tab_set'] }}</button>
         <button type="button" class="tab-btn" onclick="openTab('tab3', this)">{{ t['tab_acc'] }}</button>
+        <button type="button" class="tab-btn" onclick="openTab('tab4', this)">{{ t['tab_tpl'] }}</button>
     </div>
 
     <form method="POST" enctype="multipart/form-data">
@@ -655,6 +798,16 @@ HTML_TEMPLATE = """
                 <div><label>{{ t['p_pvc'] }}</label><input type="text" inputmode="numeric" dir="ltr" lang="en" name="p_pvc" value="15"></div>
             </div>
             <label>{{ t['p_cut'] }}</label><input type="text" inputmode="numeric" dir="ltr" lang="en" name="p_cut" value="100">
+            <hr style="margin:14px 0; border:0; border-top:1px solid var(--inp-brd);">
+            <div class="row">
+                <div><label>🏷️ اسم الورشة (للفاتورة):</label><input type="text" name="ws_name" value="{{ ws_name }}"></div>
+                <div><label>📞 هاتف الورشة:</label><input type="text" dir="ltr" name="ws_phone" value="{{ ws_phone }}"></div>
+            </div>
+            <label>📄 نوع الفاتورة:</label>
+            <select name="inv_mode">
+                <option value="workshop" {{ 'selected' if inv_mode=='workshop' else '' }}>🔧 نسخة الورشة (تظهر الهدر والتفاصيل)</option>
+                <option value="customer" {{ 'selected' if inv_mode=='customer' else '' }}>🤝 عرض سعر للزبون (يخفي الهدر)</option>
+            </select>
         </div>
 
         <div id="tab3" class="tab-content">
@@ -672,6 +825,55 @@ HTML_TEMPLATE = """
             </div>
         </div>
 
+        
+        <div id="tab4" class="tab-content">
+            <label>🧊 اختر قالباً جاهزاً (22+ نموذج):</label>
+            <select id="tpl_select" onchange="onTplChange()">
+                <optgroup label="🚪 خزائن وملابس">
+                    <option value="wardrobe2">خزانة ملابس ببابين</option>
+                    <option value="wardrobe3">خزانة ملابس 3 أبواب</option>
+                    <option value="wardrobe_slide">خزانة سحاب (جرار)</option>
+                    <option value="shoe_cab">خزانة أحذية</option>
+                    <option value="bookcase">مكتبة / رفوف مفتوحة (4 رفوف)</option>
+                </optgroup>
+                <optgroup label="🍳 مطابخ">
+                    <option value="kit_base">خزانة مطبخ سفلية (بابين)</option>
+                    <option value="kit_wall">خزانة مطبخ علوية (بابين)</option>
+                    <option value="kit_drawers">وحدة أدراج مطبخ (3 دروج)</option>
+                    <option value="kit_tall">خزانة مطبخ عالية (ثلاجة/فرن)</option>
+                </optgroup>
+                <optgroup label="🛏️ غرف نوم وأدراج">
+                    <option value="nightstand">كومودينو (طاولة سرير 2 درج)</option>
+                    <option value="chiffonier">شفونير (4 دروج)</option>
+                    <option value="dresser">تسريحة مع أدراج</option>
+                    <option value="bed_single">هيكل سرير مفرد</option>
+                    <option value="bed_double">هيكل سرير مزدوج</option>
+                </optgroup>
+                <optgroup label="🪑 طاولات ومكاتب وكراسي">
+                    <option value="table_dining">طاولة طعام مستطيلة</option>
+                    <option value="table_coffee">طاولة قهوة / وسط</option>
+                    <option value="desk_office">مكتب دراسة / عمل</option>
+                    <option value="tv_unit">طاولة تلفزيون (TV Ünitesi)</option>
+                    <option value="chair_simple">كرسي خشبي بسيط</option>
+                    <option value="bench_storage">بنش / مقعد مع تخزين</option>
+                    <option value="storage_box">صندوق تخزين (مطمورة)</option>
+                </optgroup>
+            </select>
+            <div class="row">
+                <div><label>الارتفاع H (مم)</label><input type="number" id="tpl_h" value="2000" oninput="draw3D()"></div>
+                <div><label>العرض W (مم)</label><input type="number" id="tpl_w" value="1000" oninput="draw3D()"></div>
+                <div><label>العمق D (مم)</label><input type="number" id="tpl_d" value="600" oninput="draw3D()"></div>
+            </div>
+            <div style="text-align:center; margin:12px 0; background:var(--inp-bg); border:1px solid var(--inp-brd); border-radius:10px; padding:10px;">
+                <canvas id="canvas3d" width="320" height="220" style="max-width:100%;"></canvas>
+                <div style="display:flex; justify-content:center; gap:10px; margin-top:8px;">
+                    <button type="button" onclick="rot3D(-15)" style="padding:6px 14px; border:none; border-radius:6px; background:#2563eb; color:#fff; cursor:pointer; font-weight:bold;">⬅️ يمين</button>
+                    <button type="button" onclick="rot3D(15)" style="padding:6px 14px; border:none; border-radius:6px; background:#2563eb; color:#fff; cursor:pointer; font-weight:bold;">يسار ➡️</button>
+                </div>
+            </div>
+            <button type="button" onclick="applyTemplate()" style="width:100%; padding:12px; background:#f59e0b; color:#fff; border:none; border-radius:8px; font-weight:bold; font-size:15px; cursor:pointer;">📥 توليد المقاسات وإضافتها للتقطيع</button>
+        </div>
+
         <button type="submit" class="submit-btn">{{ t['btn_calc'] }}</button>
     </form>
     {% endif %}
@@ -683,6 +885,8 @@ HTML_TEMPLATE = """
         <h3>{{ t['inv_title'] }}</h3>
         <img src="data:image/png;base64,{{ invoice }}">
         <a href="/download/{{ invoice_id }}" class="dl-btn">{{ t['dl_btn'] }}</a>
+        <a href="https://wa.me/?text={{ wa_text }}" target="_blank" class="dl-btn" style="background:#25D366;">📲 إرسال عبر واتساب</a>
+        <button type="button" onclick="window.print()" class="dl-btn" style="background:#64748b; border:none; cursor:pointer;">🏷️ طباعة ملصقات القص (Etiket)</button>
 
         <h3>{{ t['sheets_title'] }} ({{ sheets_cnt }})</h3>
         {% for s in sheets %}
@@ -741,7 +945,8 @@ def home():
 
     ctx = {
         "lang": lang, "t": TR[lang], "iban": IBAN_INFO, "price": PRO_PRICE,
-        "sw": 2800, "sh": 2100, "kerf": 4, "pieces_text": "",
+        "ws_name": WORKSHOP_NAME, "ws_phone": WORKSHOP_PHONE, "inv_mode": "workshop",
+        "sw": 2800, "sh": 2100, "kerf": 4, "pieces_text": "", "wa_text": "",
         "paywall": False, "error": None, "invoice": None, "sheets": []
     }
 
@@ -809,7 +1014,14 @@ def home():
             else:
                 final_price, acc_disp = total_tl, acc_tl
 
-            inv_b64 = render_invoice_b64(mat, sw, sh, len(pieces), total_sheets, waste_pct, pvc_m, acc_disp, final_price, curr)
+            ws_name = request.form.get("ws_name", WORKSHOP_NAME).strip() or WORKSHOP_NAME
+            ws_phone = request.form.get("ws_phone", WORKSHOP_PHONE).strip() or WORKSHOP_PHONE
+            inv_mode = request.form.get("inv_mode", "workshop")
+            ctx.update({"ws_name": ws_name, "ws_phone": ws_phone, "inv_mode": inv_mode})
+            from urllib.parse import quote
+            wa_msg = f"🪵 {ws_name}\nالمادة: {mat}\nالألواح: {total_sheets}\nالسعر الإجمالي: {final_price:.1f} {curr}\nللتواصل: {ws_phone}"
+            ctx["wa_text"] = quote(wa_msg)
+            inv_b64 = render_invoice_b64(mat, sw, sh, len(pieces), total_sheets, waste_pct, pvc_m, acc_disp, final_price, curr, ws_name, ws_phone, inv_mode)
             ctx["invoice"] = inv_b64
             ctx["invoice_id"] = cache_img(inv_b64, "invoice.png")
             ctx["sheets_cnt"] = total_sheets
