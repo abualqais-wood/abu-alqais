@@ -1047,6 +1047,19 @@ def home():
 
 
 # ============================ بوت تليجرام (Webhook) ============================
+
+TG_TEMPLATES = {
+    "wardrobe2": ("خزانة ملابس ببابين (2000×1000×600)", "2000 600 2 1\n964 600 2 1\n964 580 2 1\n1996 497 2 4"),
+    "wardrobe3": ("خزانة ملابس 3 أبواب (2100×1500×600)", "2100 600 2 1\n1464 600 2 1\n2064 580 1 1\n732 580 4 1\n2096 497 3 4"),
+    "kit_base": ("مطبخ سفلي بابين (720×800×560)", "720 560 2 1\n764 560 2 1\n764 540 1 1\n716 397 2 4"),
+    "kit_wall": ("مطبخ علوي بابين (720×800×320)", "720 320 2 1\n764 320 2 1\n764 300 1 1\n716 397 2 4"),
+    "nightstand": ("كومودينو 2 درج (500×450×400)", "500 400 2 1\n414 400 2 1\n228 446 2 4\n350 140 4 1\n354 140 4 1"),
+    "chiffonier": ("شفونير 4 دروج (900×800×450)", "900 450 2 1\n764 450 2 1\n212 796 4 4\n400 140 8 1\n704 140 8 1"),
+    "table_dining": ("طاولة طعام (750×1400×800)", "1400 800 1 4\n732 760 2 2\n1300 120 2 1"),
+    "desk_office": ("مكتب عمل (750×1200×600)", "1200 600 1 4\n732 560 2 2\n1100 120 2 1"),
+    "storage_box": ("صندوق تخزين (450×800×400)", "800 400 2 4\n414 800 2 2\n414 364 2 2"),
+}
+
 BOT_SESSIONS = {}
 
 def get_session(chat_id):
@@ -1102,6 +1115,7 @@ def main_menu_markup(s, host_url=""):
          {"text": f"🔄 التدوير: {rot_txt}", "callback_data": "toggle_rot"}],
         [{"text": f"🪚 المنشار: {s['kerf']} مم", "callback_data": "toggle_kerf"},
          {"text": "🖼️ أنواع الخشب", "callback_data": "wood_catalog"}],
+        [{"text": "🧊 قوالب جاهزة (خزائن/طاولات)", "callback_data": "menu_tpl"}],
     ]
     if host_url:
         kb.append([{"text": "🌐 فتح الموقع الكامل", "url": host_url}])
@@ -1202,6 +1216,49 @@ def telegram_webhook():
             k_order = [3, 4, 5]
             s["kerf"] = k_order[(k_order.index(s["kerf"]) + 1) % len(k_order)] if s["kerf"] in k_order else 4
             tg_edit_msg(chat_id, msg_id, "⚙️ إعدادات التقطيع الحالية:", main_menu_markup(s, host_url))
+        elif data == "menu_tpl":
+            kb = {"inline_keyboard": [
+                [{"text": "🚪 خزانة بابين", "callback_data": "run_tpl_wardrobe2"},
+                 {"text": "🚪 خزانة 3 أبواب", "callback_data": "run_tpl_wardrobe3"}],
+                [{"text": "🍳 مطبخ سفلي", "callback_data": "run_tpl_kit_base"},
+                 {"text": "🍳 مطبخ علوي", "callback_data": "run_tpl_kit_wall"}],
+                [{"text": "🛏️ كومودينو", "callback_data": "run_tpl_nightstand"},
+                 {"text": "🗄️ شفونير 4 دروج", "callback_data": "run_tpl_chiffonier"}],
+                [{"text": "🪑 طاولة طعام", "callback_data": "run_tpl_table_dining"},
+                 {"text": "💻 مكتب عمل", "callback_data": "run_tpl_desk_office"}],
+                [{"text": "📦 صندوق تخزين", "callback_data": "run_tpl_storage_box"},
+                 {"text": "🔙 رجوع", "callback_data": "back_main"}]
+            ]}
+            tg_edit_msg(chat_id, msg_id, "🧊 اختر القالب الجاهز لحساب التقطيع والفاتورة فوراً:", kb)
+        elif data.startswith("run_tpl_"):
+            tkey = data.replace("run_tpl_", "")
+            if tkey in TG_TEMPLATES:
+                tname, tpieces = TG_TEMPLATES[tkey]
+                tg_send_msg(chat_id, f"🧊 تم اختيار: **{tname}**\nجاري حساب التقطيع وإصدار الفاتورة...")
+                try:
+                    groups = []
+                    for line in tpieces.splitlines():
+                        tokens = line.split()
+                        l, w, qty = int(tokens[0]), int(tokens[1]), int(tokens[2])
+                        le, we = parse_edges(tokens[3])
+                        groups.append({"l": l, "w": w, "qty": qty, "le": le, "we": we, "gi": len(groups) + 1})
+                    sw, sh, kerf = s["sw"], s["sh"], s["kerf"]
+                    pieces = [dict(g) for g in groups for _ in range(g["qty"])]
+                    _, bins = best_layout(pieces, sw, sh, kerf, s["rot"])
+                    total_sheets = len(bins)
+                    waste_pct = (1 - sum(p["l"] * p["w"] for p in pieces) / float(total_sheets * sw * sh)) * 100
+                    pvc_m = sum(p["le"] * p["l"] + p["we"] * p["w"] for p in pieces) / 1000.0
+                    total_tl = ((total_sheets * (s["p_sheet"] + s["p_cut"])) + (pvc_m * s["p_pvc"])) * (1 + s["margin"] / 100.0)
+                    curr = s["curr"]
+                    final_price = total_tl / 35.0 if curr == "USD" else (total_tl / 38.0 if curr == "EUR" else total_tl)
+                    tg_send_msg(chat_id, build_cut_summary(groups))
+                    inv_b64 = render_invoice_b64(s["mat"], sw, sh, len(pieces), total_sheets, waste_pct, pvc_m, 0, final_price, curr)
+                    tg_send_b64_photo(chat_id, inv_b64, caption=f"🧾 الفاتورة ({tname}) | الألواح: {total_sheets} | الهدر: {waste_pct:.1f}%")
+                    for i, b in enumerate(bins):
+                        s_b64, w_pct = render_sheet_b64(b, i + 1, total_sheets, sw, sh, kerf)
+                        tg_send_b64_photo(chat_id, s_b64, caption=f"📐 لوح {i + 1}/{total_sheets} (هدر {w_pct:.1f}%)")
+                except Exception as ex:
+                    tg_send_msg(chat_id, f"❌ خطأ: {ex}")
         elif data == "wood_catalog":
             for w_name, w_url in WOOD_CATALOG:
                 tg_api("sendPhoto", data={"chat_id": chat_id, "photo": w_url, "caption": f"🪵 {w_name}"})
