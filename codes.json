@@ -1,6 +1,11 @@
 {
   "codes": {},
-  "tg_users": {},
+  "tg_users": {
+    "5573064206": {
+      "trial_used": false,
+      "pro_until": 0
+    }
+  },
   "banned": [],
   "offcuts": [
     {
