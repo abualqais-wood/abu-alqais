@@ -348,27 +348,75 @@ HTML_TEMPLATE = """
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ t['title'] }}</title>
     <style>
-        body { font-family: Tahoma, Arial, sans-serif; background: #eef2f6; margin: 0; padding: 12px; color: #1f2937; }
-        .container { max-width: 650px; margin: auto; background: #fff; padding: 18px; border-radius: 16px; box-shadow: 0 6px 20px rgba(0,0,0,0.08); }
+        :root {
+            --bg-body: #eef2f6;
+            --bg-card: #ffffff;
+            --text-main: #1f2937;
+            --text-lbl: #374151;
+            --hdr-bg: linear-gradient(135deg, #1e3a8a, #2563eb);
+            --hdr-sub: #dbeafe;
+            --inp-bg: #f9fafb;
+            --inp-brd: #d1d5db;
+            --tab-bg: #f3f4f6;
+            --tab-txt: #4b5563;
+            --tab-act: #1e3a8a;
+            --btn-main: #10b981;
+            --ocr-bg: #f1f5f9;
+            --ocr-txt: #1e293b;
+        }
+        body.theme-wood {
+            --bg-body: #f5efe6;
+            --bg-card: #fffdf9;
+            --text-main: #3e2723;
+            --text-lbl: #5d4037;
+            --hdr-bg: linear-gradient(135deg, #5d4037, #8d6e63);
+            --hdr-sub: #efebe9;
+            --inp-bg: #faf6f0;
+            --inp-brd: #d7ccc8;
+            --tab-bg: #efebe9;
+            --tab-txt: #5d4037;
+            --tab-act: #6d4c41;
+            --btn-main: #b45309;
+            --ocr-bg: #f5ebe0;
+            --ocr-txt: #4e342e;
+        }
+        body.theme-dark {
+            --bg-body: #0f172a;
+            --bg-card: #1e293b;
+            --text-main: #f1f5f9;
+            --text-lbl: #cbd5e1;
+            --hdr-bg: linear-gradient(135deg, #0f172a, #334155);
+            --hdr-sub: #94a3b8;
+            --inp-bg: #0f172a;
+            --inp-brd: #334155;
+            --tab-bg: #334155;
+            --tab-txt: #cbd5e1;
+            --tab-act: #3b82f6;
+            --btn-main: #059669;
+            --ocr-bg: #0f172a;
+            --ocr-txt: #e2e8f0;
+        }
+        body { font-family: Tahoma, Arial, sans-serif; background: var(--bg-body); margin: 0; padding: 12px; color: var(--text-main); transition: 0.25s; }
+        .container { max-width: 650px; margin: auto; background: var(--bg-card); padding: 18px; border-radius: 16px; box-shadow: 0 6px 20px rgba(0,0,0,0.08); }
         .lang-bar { display: flex; justify-content: flex-end; gap: 6px; margin-bottom: 10px; }
         .lang-bar a { text-decoration: none; padding: 5px 10px; border-radius: 6px; font-size: 12px; font-weight: bold; background: #e5e7eb; color: #374151; }
         .lang-bar a.active { background: #1e3a8a; color: #fff; }
-        .header { background: linear-gradient(135deg, #1e3a8a, #2563eb); color: #fff; padding: 16px; border-radius: 12px; text-align: center; margin-bottom: 16px; }
+        .header { background: var(--hdr-bg); color: #fff; padding: 16px; border-radius: 12px; text-align: center; margin-bottom: 16px; }
         .header h2 { margin: 0; font-size: 20px; }
-        .header p { margin: 5px 0 0; font-size: 13px; color: #dbeafe; }
+        .header p { margin: 5px 0 0; font-size: 13px; color: var(--hdr-sub); }
         .tabs { display: flex; gap: 6px; margin-bottom: 15px; border-bottom: 2px solid #e5e7eb; padding-bottom: 8px; }
-        .tab-btn { flex: 1; padding: 10px 5px; border: none; border-radius: 8px; background: #f3f4f6; font-weight: bold; font-size: 13px; cursor: pointer; color: #4b5563; }
-        .tab-btn.active { background: #1e3a8a; color: #fff; }
+        .tab-btn { flex: 1; padding: 10px 5px; border: none; border-radius: 8px; background: var(--tab-bg); font-weight: bold; font-size: 13px; cursor: pointer; color: var(--tab-txt); }
+        .tab-btn.active { background: var(--tab-act); color: #fff; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
-        label { display: block; font-weight: bold; margin: 10px 0 4px; font-size: 13px; color: #374151; }
-        input, textarea, select { width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 8px; box-sizing: border-box; font-size: 14px; background: #f9fafb; }
+        label { display: block; font-weight: bold; margin: 10px 0 4px; font-size: 13px; color: var(--text-lbl); }
+        input, textarea, select { width: 100%; padding: 10px; border: 1px solid var(--inp-brd); border-radius: 8px; box-sizing: border-box; font-size: 14px; background: var(--inp-bg); color: var(--text-main); }
         .row { display: flex; gap: 10px; }
         .row div { flex: 1; }
         .ocr-btns { display: flex; gap: 10px; margin-top: 6px; }
-        .ocr-btn { flex: 1; padding: 12px 8px; background: #f1f5f9; border: 2px dashed #94a3b8; border-radius: 8px; text-align: center; cursor: pointer; font-weight: bold; color: #1e293b; font-size: 13px; margin: 0; }
+        .ocr-btn { flex: 1; padding: 12px 8px; background: var(--ocr-bg); border: 2px dashed #94a3b8; border-radius: 8px; text-align: center; cursor: pointer; font-weight: bold; color: var(--ocr-txt); font-size: 13px; margin: 0; }
         .ocr-status { margin-top: 8px; font-size: 13px; font-weight: bold; color: #2563eb; display: none; }
-        .submit-btn { width: 100%; padding: 14px; background: #10b981; color: #fff; border: none; border-radius: 10px; font-size: 16px; font-weight: bold; margin-top: 16px; cursor: pointer; }
+        .submit-btn { width: 100%; padding: 14px; background: var(--btn-main); color: #fff; border: none; border-radius: 10px; font-size: 16px; font-weight: bold; margin-top: 16px; cursor: pointer; }
         .dl-btn { display: inline-block; padding: 8px 14px; background: #2563eb; color: #fff; text-decoration: none; border-radius: 6px; font-size: 13px; font-weight: bold; margin-top: 6px; }
         .paywall { background: #fef2f2; border: 2px solid #ef4444; padding: 15px; border-radius: 10px; text-align: center; }
         .iban { background: #fff; padding: 10px; border-radius: 6px; font-family: monospace; font-size: 14px; border: 1px dashed #ef4444; margin: 10px 0; direction: ltr; }
@@ -377,6 +425,15 @@ HTML_TEMPLATE = """
         .error { background: #fee2e2; color: #991b1b; padding: 10px; border-radius: 8px; margin-top: 10px; font-size: 14px; }
     </style>
     <script>
+        function setTheme(t) {
+            document.body.className = t ? ('theme-' + t) : '';
+            localStorage.setItem('aq_theme', t);
+        }
+        window.addEventListener('DOMContentLoaded', () => {
+            const saved = localStorage.getItem('aq_theme') || '';
+            if (saved) document.body.className = 'theme-' + saved;
+        });
+
         function openTab(id, btn) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
@@ -415,10 +472,17 @@ HTML_TEMPLATE = """
 </head>
 <body>
 <div class="container">
-    <div class="lang-bar">
-        <a href="/?lang=ar" class="{{ 'active' if lang=='ar' else '' }}">🇸🇦 العربية</a>
-        <a href="/?lang=tr" class="{{ 'active' if lang=='tr' else '' }}">🇹🇷 Türkçe</a>
-        <a href="/?lang=en" class="{{ 'active' if lang=='en' else '' }}">🇬🇧 English</a>
+    <div class="lang-bar" style="justify-content: space-between; align-items: center;">
+        <div style="display:flex; gap:5px;">
+            <button type="button" onclick="setTheme('')" style="padding:5px 9px; border:none; border-radius:6px; cursor:pointer; font-size:12px; background:#2563eb; color:#fff;">🔵 أزرق</button>
+            <button type="button" onclick="setTheme('wood')" style="padding:5px 9px; border:none; border-radius:6px; cursor:pointer; font-size:12px; background:#8d6e63; color:#fff;">🪵 خشبي</button>
+            <button type="button" onclick="setTheme('dark')" style="padding:5px 9px; border:none; border-radius:6px; cursor:pointer; font-size:12px; background:#1e293b; color:#fff;">🌙 ليلي</button>
+        </div>
+        <div style="display:flex; gap:5px;">
+            <a href="/?lang=ar" class="{{ 'active' if lang=='ar' else '' }}">🇸🇦 العربية</a>
+            <a href="/?lang=tr" class="{{ 'active' if lang=='tr' else '' }}">🇹🇷 Türkçe</a>
+            <a href="/?lang=en" class="{{ 'active' if lang=='en' else '' }}">🇬🇧 English</a>
+        </div>
     </div>
     <div class="header">
         <h2>🪵 {{ t['title'] }}</h2>
