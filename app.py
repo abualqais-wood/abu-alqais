@@ -497,14 +497,14 @@ HTML_TEMPLATE = """
         }
         body { font-family: Tahoma, Arial, sans-serif; background: var(--bg-body); margin: 0; padding: 12px; color: var(--text-main); transition: 0.25s; }
         .container { max-width: 650px; margin: auto; background: var(--bg-card); padding: 18px; border-radius: 16px; box-shadow: 0 6px 20px rgba(0,0,0,0.08); }
-        .lang-bar { display: flex; justify-content: flex-end; gap: 6px; margin-bottom: 10px; }
+        .lang-bar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 6px; margin-bottom: 10px; }
         .lang-bar a { text-decoration: none; padding: 5px 10px; border-radius: 6px; font-size: 12px; font-weight: bold; background: #e5e7eb; color: #374151; }
         .lang-bar a.active { background: #1e3a8a; color: #fff; }
         .header { background: var(--hdr-bg); color: #fff; padding: 16px; border-radius: 12px; text-align: center; margin-bottom: 16px; }
         .header h2 { margin: 0; font-size: 20px; }
         .header p { margin: 5px 0 0; font-size: 13px; color: var(--hdr-sub); }
-        .tabs { display: flex; gap: 6px; margin-bottom: 15px; border-bottom: 2px solid #e5e7eb; padding-bottom: 8px; }
-        .tab-btn { flex: 1; padding: 10px 5px; border: none; border-radius: 8px; background: var(--tab-bg); font-weight: bold; font-size: 13px; cursor: pointer; color: var(--tab-txt); }
+        .tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 15px; border-bottom: 2px solid #e5e7eb; padding-bottom: 8px; }
+        .tab-btn { flex: 1 1 30%; min-width: 95px; padding: 9px 6px; border: none; border-radius: 8px; background: var(--tab-bg); font-weight: bold; font-size: 12px; cursor: pointer; color: var(--tab-txt); text-align: center; }
         .tab-btn.active { background: var(--tab-act); color: #fff; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
@@ -1048,18 +1048,38 @@ HTML_TEMPLATE = """
 """
 
 
-IMG_CACHE = {}
+def _tmp_set(prefix, key, val):
+    try:
+        with open(f"/tmp/aq_{prefix}_{key}.json", "w", encoding="utf-8") as f:
+            json.dump(val, f, ensure_ascii=False)
+    except Exception:
+        pass
+
+def _tmp_get(prefix, key):
+    try:
+        with open(f"/tmp/aq_{prefix}_{key}.json", "r", encoding="utf-8") as f:
+            return json.load(f)
+    except Exception:
+        return None
+
+class _TmpDict:
+    def __init__(self, prefix):
+        self.prefix = prefix
+    def __setitem__(self, k, v):
+        _tmp_set(self.prefix, k, v)
+    def get(self, k, default=None):
+        v = _tmp_get(self.prefix, k)
+        return v if v is not None else default
+
+IMG_CACHE = _TmpDict("img")
 
 def cache_img(b64_str, fname):
-    if len(IMG_CACHE) > 60:
-        IMG_CACHE.clear()
     img_id = "".join(random.choices(string.ascii_lowercase + string.digits, k=10))
-    IMG_CACHE[img_id] = (b64_str, fname)
+    IMG_CACHE[img_id] = [b64_str, fname]
     return img_id
 
-
-SAW_CACHE = {}
-CSV_CACHE = {}
+SAW_CACHE = _TmpDict("saw")
+CSV_CACHE = _TmpDict("csv")
 
 @app.route("/saw/<oid>", methods=["GET"])
 def saw_view(oid):
@@ -1085,7 +1105,7 @@ def export_csv(oid):
     return resp
 
 
-ETIKET_CACHE = {}
+ETIKET_CACHE = _TmpDict("etiket")
 
 @app.route("/invoice_pdf/<oid>", methods=["GET"])
 def invoice_pdf(oid):
