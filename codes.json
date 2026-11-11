@@ -125,6 +125,13 @@
       "loc": "United States - The Dalles",
       "time": "2026-11-11 17:12",
       "ref": "مباشر"
+    },
+    {
+      "ip": "35.197.80.206",
+      "device": "Go-http-client/2.0",
+      "loc": "United States - The Dalles",
+      "time": "2026-11-11 17:13",
+      "ref": "مباشر"
     }
   ]
 }
