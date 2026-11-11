@@ -139,6 +139,13 @@
       "loc": "United States - The Dalles",
       "time": "2026-11-11 17:15",
       "ref": "مباشر"
+    },
+    {
+      "ip": "5.229.6.230",
+      "device": "Dalvik/2.1.0 (Linux; U; Android 13; 22101316G Build/TP1A.220624.014)",
+      "loc": "Turkey - Altınkum",
+      "time": "2026-11-11 17:17",
+      "ref": "مباشر"
     }
   ]
 }
