@@ -28,9 +28,9 @@ WORKSHOP_PHONE = "05466126354"
 IBAN_INFO = "TR00 0000 0000 0000 0000 0000 00"  # ضع الآيبان الخاص بك هنا
 PRO_PRICE = "250 TL / شهرياً"
 TIERS = {
-    "pro": {"name": "Pro (برو)", "price": "250 TL / شهرياً", "desc": "تقطيع الألواح + الفاتورة + قراءة الصور AI + القوالب الجاهزة"},
-    "promax": {"name": "Pro Max (برو ماكس)", "price": "450 TL / شهرياً", "desc": "كل ميزات Pro + اسم الورشة + دفتر الورشة والمخزون + رابط عامل المنشار + واتساب"},
-    "ultra": {"name": "Ultra (أولترا)", "price": "750 TL / شهرياً", "desc": "كل ميزات Pro Max + تصدير CNC CSV + قارتيلا 75+75 + PDF + ملصقات Etiket"}
+    "pro": {"name": "Pro (برو)", "price": "250 TL / شهرياً", "desc": "{{ t['tier_pro_d'] }}"},
+    "promax": {"name": "Pro Max (برو ماكس)", "price": "450 TL / شهرياً", "desc": "{{ t['tier_max_d'] }}"},
+    "ultra": {"name": "Ultra (أولترا)", "price": "750 TL / شهرياً", "desc": "{{ t['tier_ult_d'] }}"}
 }
 ADMIN_UNLOCK_CODE = "QAIS2026"
 
@@ -162,7 +162,24 @@ TR = {
         "sheets_title": "📐 مخططات التقطيع:",
         "pay_title": "🔒 انتهت تجربتك المجانية",
         "pay_desc": "للاستمرار في استخدام النظام، يرجى الاشتراك في باقة Pro",
-        "pay_btn": "🔓 تفعيل الاشتراك", "pay_ph": "أدخل كود التفعيل..."
+        "pay_btn": "🔓 تفعيل الاشتراك", "pay_ph": "أدخل كود التفعيل...",
+        "tip_grain": "{{ t['tip_grain']|safe }}",
+        "use_offcuts": "{{ t['use_offcuts'] }}",
+        "cust_lbl": "{{ t['cust_lbl'] }}",
+        "cust_ph": "مثال: أحمد محمد",
+        "dep_lbl": "{{ t['dep_lbl'] }}",
+        "wa_btn": "{{ t['wa_btn'] }}",
+        "print_btn": "{{ t['print_btn'] }}",
+        "saw_btn": "{{ t['saw_btn'] }}",
+        "csv_btn": "{{ t['csv_btn'] }}",
+        "pdf_btn": "{{ t['pdf_btn'] }}",
+        "etiket_btn": "{{ t['etiket_btn'] }}",
+        "tier_pro": "{{ t['tier_pro'] }}",
+        "tier_pro_d": "تقطيع الألواح + الفاتورة + قراءة الصور AI + القوالب الجاهزة",
+        "tier_max": "{{ t['tier_max'] }}",
+        "tier_max_d": "كل ميزات Pro + اسم الورشة + دفتر الورشة والمخزون + رابط عامل المنشار + واتساب",
+        "tier_ult": "{{ t['tier_ult'] }}",
+        "tier_ult_d": "كل ميزات Pro Max + تصدير CNC CSV + قارتيلا 75+75 + PDF + ملصقات Etiket"
     },
     "tr": {
         "dir": "ltr", "title": "Abu Al-Qais - Kesim Optimizasyon",
@@ -186,7 +203,24 @@ TR = {
         "sheets_title": "📐 Kesim Planları:",
         "pay_title": "🔒 Ücretsiz Deneme Bitti",
         "pay_desc": "Devam etmek için Pro pakete geçin",
-        "pay_btn": "🔓 Aktifleştir", "pay_ph": "Aktivasyon kodu..."
+        "pay_btn": "🔓 Aktifleştir", "pay_ph": "Aktivasyon kodu...",
+        "tip_grain": "💡 İpucu: Döndürmeyi engellemek (desen yönü) için satır sonuna <b>G</b>, kalın bant için <b>2mm</b> ekleyin (Örn: <code>800 600 2 4 2mm G</code>)",
+        "use_offcuts": "♻️ Yeni plaka açmadan önce kayıtlı fireleri (parçaları) otomatik kullan",
+        "cust_lbl": "👤 Müşteri Adı (İsteğe bağlı):",
+        "cust_ph": "Örn: Ahmet Yılmaz",
+        "dep_lbl": "💵 Alınan Kapora:",
+        "wa_btn": "📲 WhatsApp ile Gönder",
+        "print_btn": "🏷️ Kesim Etiketlerini Yazdır",
+        "saw_btn": "🪚 Kesimci Bağlantısı (Fiyatsız)",
+        "csv_btn": "📊 CNC Kesim Makinesi için CSV İndir",
+        "pdf_btn": "📄 Faturayı PDF İndir",
+        "etiket_btn": "🏷️ Etiket Sayfası (Etiket)",
+        "tier_pro": "🔹 Pro Paket — 250 TL / Aylık",
+        "tier_pro_d": "Plaka Kesim + Fatura + Yapay Zeka Fotoğraf Okuma + Hazır Şablonlar",
+        "tier_max": "🔸 Pro Max Paket — 450 TL / Aylık",
+        "tier_max_d": "Tüm Pro özellikleri + Atölye Adı + Defter & Fire + Kesimci Linki + WhatsApp",
+        "tier_ult": "👑 Ultra Paket — 750 TL / Aylık",
+        "tier_ult_d": "Tüm Pro Max özellikleri + CNC CSV + 75+75 Kartela + PDF + Etiket"
     },
     "en": {
         "dir": "ltr", "title": "Abu Al-Qais - Woodwork Pro",
@@ -210,7 +244,24 @@ TR = {
         "sheets_title": "📐 Cutting Layouts:",
         "pay_title": "🔒 Free Trial Ended",
         "pay_desc": "Please upgrade to Pro to continue",
-        "pay_btn": "🔓 Activate", "pay_ph": "Activation code..."
+        "pay_btn": "🔓 Activate", "pay_ph": "Activation code...",
+        "tip_grain": "💡 Tip: Add <b>G</b> at the end of a line to lock grain direction, and <b>2mm</b> for thick edge banding (e.g. <code>800 600 2 4 2mm G</code>)",
+        "use_offcuts": "♻️ Automatically use saved offcuts before opening a new sheet",
+        "cust_lbl": "👤 Customer Name (Optional):",
+        "cust_ph": "e.g. John Doe",
+        "dep_lbl": "💵 Deposit Paid:",
+        "wa_btn": "📲 Send via WhatsApp",
+        "print_btn": "🏷️ Print Cutting Labels (Etiket)",
+        "saw_btn": "🪚 Saw Operator Link (No Prices)",
+        "csv_btn": "📊 Export CSV for CNC Machine",
+        "pdf_btn": "📄 Download Invoice PDF",
+        "etiket_btn": "🏷️ Labels Page (Etiket)",
+        "tier_pro": "🔹 Pro Plan — 250 TL / Month",
+        "tier_pro_d": "Sheet Cutting + Invoice + AI Photo Reading + 3D Templates",
+        "tier_max": "🔸 Pro Max Plan — 450 TL / Month",
+        "tier_max_d": "All Pro features + Workshop Name + Ledger & Offcuts + Saw Link + WhatsApp",
+        "tier_ult": "👑 Ultra Plan — 750 TL / Month",
+        "tier_ult_d": "All Pro Max features + CNC CSV + 75+75 Kartela + PDF + Etiket Labels"
     }
 }
 
@@ -888,7 +939,7 @@ HTML_TEMPLATE = """
             </label>
 
             <div class="row">
-                <div><label>👤 اسم الزبون (اختياري):</label><input type="text" name="cust_name" value="{{ cust_name }}" placeholder="مثال: أحمد محمد"></div>
+                <div><label>👤 اسم الزبون (اختياري):</label><input type="text" name="cust_name" value="{{ cust_name }}" placeholder="{{ t['cust_ph'] }}"></div>
                 <div><label>💵 العربون المدفوع:</label><input type="text" inputmode="decimal" dir="ltr" name="deposit" value="{{ deposit }}"></div>
             </div>
             <label>{{ t['ocr_lbl'] }}</label>
@@ -1198,7 +1249,8 @@ def home():
     lang = request.args.get("lang") or request.cookies.get("lang") or "ar"
     if lang not in TR: lang = "ar"
     is_pro = request.cookies.get("is_pro") == "1"
-    trial_used = request.cookies.get("trial_used") == "1"
+    client_ip = (request.headers.get("X-Forwarded-For") or request.remote_addr or "").split(",")[0].strip()
+    trial_used = (request.cookies.get("trial_used") == "1") or bool(client_ip and _tmp_get("trial_ip", client_ip.replace(".", "_").replace(":", "_")))
 
     st_view = load_store()
     ctx = {
@@ -1327,6 +1379,8 @@ def home():
             ctx["ledger"] = list(reversed(st_save.get("ledger", [])))[:25]
 
             resp = make_response(render_template_string(HTML_TEMPLATE, **ctx))
+            if client_ip:
+                _tmp_set("trial_ip", client_ip.replace(".", "_").replace(":", "_"), 1)
             resp.set_cookie("trial_used", "1", max_age=365*86400)
             resp.set_cookie("lang", lang, max_age=365*86400)
             return resp
