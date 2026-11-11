@@ -116,5 +116,15 @@
     "176.220.68.238",
     "5.229.33.102",
     "5.229.6.230"
+  ],
+  "banned_codes": [],
+  "web_users": [
+    {
+      "ip": "34.82.114.42",
+      "device": "Go-http-client/2.0",
+      "loc": "United States - The Dalles",
+      "time": "2026-11-11 17:12",
+      "ref": "مباشر"
+    }
   ]
 }
