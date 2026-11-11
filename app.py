@@ -61,7 +61,7 @@ def load_store(force=False):
     global _STORE_CACHE
     if _STORE_CACHE is not None and not force:
         return _STORE_CACHE
-    default_store = {"codes": {}, "tg_users": {}, "banned": [], "offcuts": [], "ledger": []}
+    default_store = {"codes": {}, "tg_users": {}, "banned": [], "offcuts": [], "ledger": [], "trial_ips": []}
     if not (GITHUB_TOKEN and GITHUB_REPO and requests):
         _STORE_CACHE = default_store
         return _STORE_CACHE
@@ -76,6 +76,7 @@ def load_store(force=False):
                 data.setdefault("banned", [])
                 data.setdefault("offcuts", [])
                 data.setdefault("ledger", [])
+                data.setdefault("trial_ips", [])
                 _STORE_CACHE = data
                 return _STORE_CACHE
     except Exception:
@@ -1326,7 +1327,12 @@ def home():
     if lang not in TR: lang = "ar"
     is_pro = request.cookies.get("is_pro") == "1"
     client_ip = (request.headers.get("X-Forwarded-For") or request.remote_addr or "").split(",")[0].strip()
-    trial_used = (request.cookies.get("trial_used") == "1") or bool(client_ip and _tmp_get("trial_ip", client_ip.replace(".", "_").replace(":", "_")))
+    st_ip = load_store()
+    trial_used = (
+        (request.cookies.get("trial_used") == "1")
+        or bool(client_ip and _tmp_get("trial_ip", client_ip.replace(".", "_").replace(":", "_")))
+        or bool(client_ip and client_ip in st_ip.get("trial_ips", []))
+    )
 
     st_view = load_store()
     ctx = {
@@ -1457,6 +1463,10 @@ def home():
             resp = make_response(render_template_string(HTML_TEMPLATE, **ctx))
             if client_ip:
                 _tmp_set("trial_ip", client_ip.replace(".", "_").replace(":", "_"), 1)
+                if client_ip not in st_save.setdefault("trial_ips", []):
+                    st_save["trial_ips"].append(client_ip)
+                    st_save["trial_ips"] = st_save["trial_ips"][-500:]
+                    save_store(st_save)
             resp.set_cookie("trial_used", "1", max_age=365*86400)
             resp.set_cookie("lang", lang, max_age=365*86400)
             return resp
