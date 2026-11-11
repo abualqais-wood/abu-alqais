@@ -1798,11 +1798,6 @@ def set_webhook():
 @app.route("/telegram_webhook", methods=["POST"])
 def telegram_webhook():
     update = request.get_json(silent=True) or {}
-    upd_id = update.get("update_id")
-    if upd_id is not None:
-        if _tmp_get("tg_upd", str(upd_id)):
-            return "OK", 200
-        _tmp_set("tg_upd", str(upd_id), 1)
     host_url = f"https://{request.host}"
 
     # 1. معالجة ضغطات الأزرار التفاعلية
@@ -2080,47 +2075,17 @@ def telegram_webhook():
                 st["tg_users"][str(chat_id)] = {"trial_used": True, "pro_until": 0}
                 save_store(st)
 
+        pieces_text = ""
         if "photo" in msg:
             tg_send_msg(chat_id, "⏳ جاري قراءة المقاسات من الصورة...")
             file_id = msg["photo"][-1]["file_id"]
-            def process_photo_bg(cid, fid, sess):
-                try:
-                    img_bytes = tg_download_file(fid)
-                    if not img_bytes:
-                        raise ValueError("تعذر تحميل الصورة من تليجرام")
-                    ptxt = ocr_image_ai(img_bytes)
-                    tg_send_msg(cid, f"📋 المقاسات المستخرجة:\n{ptxt}")
-                    grps = []
-                    for line in normalize_digits(ptxt).splitlines():
-                        tokens = [t for t in re.split(r"[\s,;*×x:=]+", line.strip()) if t]
-                        if len(tokens) >= 2:
-                            l, w = int(float(tokens[0])), int(float(tokens[1]))
-                            qty = int(tokens[2]) if len(tokens) > 2 and tokens[2].isdigit() else 1
-                            le, we = parse_edges(tokens[3]) if len(tokens) > 3 else (0, 0)
-                            grps.append({"l": l, "w": w, "qty": qty, "le": le, "we": we, "gi": len(grps) + 1})
-                    if not grps:
-                        raise ValueError("لم أتمكن من استخراج مقاسات واضحة من الصورة.")
-                    sw_b, sh_b, kerf_b = sess["sw"], sess["sh"], sess["kerf"]
-                    pcs = [dict(g) for g in grps for _ in range(g["qty"])]
-                    _, bns = best_layout(pcs, sw_b, sh_b, kerf_b, sess["rot"])
-                    t_sh = len(bns)
-                    w_pct_tot = (1 - sum(p["l"] * p["w"] for p in pcs) / float(t_sh * sw_b * sh_b)) * 100
-                    pvc_m_b = sum(p["le"] * p["l"] + p["we"] * p["w"] for p in pcs) / 1000.0
-                    tot_tl = ((t_sh * (sess["p_sheet"] + sess["p_cut"])) + (pvc_m_b * sess["p_pvc"])) * (1 + sess["margin"] / 100.0)
-                    cur_b = sess["curr"]
-                    f_pr = tot_tl / 35.0 if cur_b == "USD" else (tot_tl / 38.0 if cur_b == "EUR" else tot_tl)
-                    tg_send_msg(cid, build_cut_summary(grps))
-                    inv_b = render_invoice_b64(sess["mat"], sw_b, sh_b, len(pcs), t_sh, w_pct_tot, pvc_m_b, 0, f_pr, cur_b)
-                    tg_send_b64_photo(cid, inv_b, caption=f"🧾 الفاتورة ({sess['mat']}) | الألواح: {t_sh} | الهدر: {w_pct_tot:.1f}%")
-                    for idx_b, bn in enumerate(bns):
-                        sb, wp = render_sheet_b64(bn, idx_b + 1, t_sh, sw_b, sh_b, kerf_b)
-                        tg_send_b64_photo(cid, sb, caption=f"📐 لوح {idx_b + 1}/{t_sh} (هدر {wp:.1f}%)")
-                except Exception as ex:
-                    tg_send_msg(cid, f"❌ خطأ: {ex}")
-            threading.Thread(target=process_photo_bg, args=(chat_id, file_id, dict(s)), daemon=True).start()
-            return "OK", 200
-
-        pieces_text = text if text else ""
+            img_bytes = tg_download_file(file_id)
+            if not img_bytes:
+                raise ValueError("تعذر تحميل الصورة من تليجرام")
+            pieces_text = ocr_image_ai(img_bytes)
+            tg_send_msg(chat_id, f"📋 المقاسات المستخرجة:\n{pieces_text}")
+        elif text:
+            pieces_text = text
 
         if not pieces_text:
             return "OK", 200
