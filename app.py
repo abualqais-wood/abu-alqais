@@ -908,7 +908,7 @@ HTML_TEMPLATE = """
             let ed = '0';
             if (lc || wc) ed = (lc ? 'L' + lc : '') + (wc ? 'W' + wc : '');
             const box = document.getElementById('pieces_box');
-            box.value = (box.value.trim() ? box.value.trim() + '\n' : '') + `${l} ${w} ${q} ${ed}`;
+            box.value = (box.value.trim() ? box.value.trim() + String.fromCharCode(10) : '') + `${l} ${w} ${q} ${ed}`;
             document.getElementById('qp_l').value = '';
             document.getElementById('qp_w').value = '';
         }
