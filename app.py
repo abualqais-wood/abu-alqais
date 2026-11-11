@@ -144,6 +144,7 @@ TR = {
         "dir": "rtl", "title": "أبو القيس - نظام النجارة المتكامل",
         "sub": "نظام تقطيع الأخشاب والتسعير | هاتف: " + WORKSHOP_PHONE,
         "tab_cut": "📐 التقطيع والطلب", "tab_set": "⚙️ الأسعار والعملات", "tab_acc": "🔩 الإكسسوارات", "tab_tpl": "🧊 قوالب 3D", "tab_led": "📒 الدفتر والمخزون", "tab_kar": "🎨 قارتيلا 75+75",
+        "th_blue": "🔵 أزرق", "th_wood": "🪵 خشبي", "th_dark": "🌙 ليلي", "kar_c_btn": "🎨 قارتيلا الألوان (75 لون)", "kar_cnc_btn": "🚪 قارتيلا كاباك CNC (75 تصميم)",
         "mat_lbl": "نوع الخشب:", "sw_lbl": "طول اللوح (مم)", "sh_lbl": "عرض اللوح (مم)",
         "kerf_lbl": "سمك المنشار (Kerf)", "rot_lbl": "تدوير القطع", "yes": "مسموح", "no": "ممنوع",
         "pieces_lbl": "المقاسات (الطول العرض العدد الحواف):",
@@ -163,28 +164,30 @@ TR = {
         "pay_title": "🔒 انتهت تجربتك المجانية",
         "pay_desc": "للاستمرار في استخدام النظام، يرجى الاشتراك في باقة Pro",
         "pay_btn": "🔓 تفعيل الاشتراك", "pay_ph": "أدخل كود التفعيل...",
-        "tip_grain": "{{ t['tip_grain']|safe }}",
-        "use_offcuts": "{{ t['use_offcuts'] }}",
-        "cust_lbl": "{{ t['cust_lbl'] }}",
+        "tip_grain": "💡 نصيحة: أضف <b>G</b> بنهاية السطر لمنع التدوير (اتجاه العرق)، وأضف <b>2mm</b> للشريط السميك (مثال: <code>800 600 2 4 2mm G</code>)",
+        "use_offcuts": "♻️ استخدام البقايا المحفوظة تلقائياً قبل فتح لوح جديد",
+        "cust_lbl": "👤 اسم الزبون (اختياري):",
         "cust_ph": "مثال: أحمد محمد",
-        "dep_lbl": "{{ t['dep_lbl'] }}",
-        "wa_btn": "{{ t['wa_btn'] }}",
-        "print_btn": "{{ t['print_btn'] }}",
-        "saw_btn": "{{ t['saw_btn'] }}",
-        "csv_btn": "{{ t['csv_btn'] }}",
-        "pdf_btn": "{{ t['pdf_btn'] }}",
-        "etiket_btn": "{{ t['etiket_btn'] }}",
-        "tier_pro": "{{ t['tier_pro'] }}",
+        "dep_lbl": "💵 العربون المدفوع:",
+        "wa_btn": "📲 إرسال عبر واتساب",
+        "print_btn": "🏷️ طباعة ملصقات القص (Etiket)",
+        "saw_btn": "🪚 رابط عامل المنشار (بدون أسعار)",
+        "csv_btn": "📊 تصدير CSV لماكينة القص (CNC)",
+        "pdf_btn": "📄 تحميل الفاتورة PDF",
+        "etiket_btn": "🏷️ صفحة ملصقات (Etiket)",
+        "tier_pro": "🔹 باقة Pro — 250 TL / شهرياً",
         "tier_pro_d": "تقطيع الألواح + الفاتورة + قراءة الصور AI + القوالب الجاهزة",
-        "tier_max": "{{ t['tier_max'] }}",
+        "tier_max": "🔸 باقة Pro Max — 450 TL / شهرياً",
         "tier_max_d": "كل ميزات Pro + اسم الورشة + دفتر الورشة والمخزون + رابط عامل المنشار + واتساب",
-        "tier_ult": "{{ t['tier_ult'] }}",
+        "tier_ult": "👑 باقة Ultra — 750 TL / شهرياً",
         "tier_ult_d": "كل ميزات Pro Max + تصدير CNC CSV + قارتيلا 75+75 + PDF + ملصقات Etiket"
     },
     "tr": {
         "dir": "ltr", "title": "Abu Al-Qais - Kesim Optimizasyon",
         "sub": "Ahşap Kesim ve Maliyet Sistemi | Tel: " + WORKSHOP_PHONE,
         "tab_cut": "📐 Kesim & Sipariş", "tab_set": "⚙️ Fiyat & Döviz", "tab_acc": "🔩 Aksesuar", "tab_tpl": "🧊 3D Şablonlar", "tab_led": "📒 Defter & Fire", "tab_kar": "🎨 Kartela 75+75",
+        "th_blue": "🔵 Blue", "th_wood": "🪵 Wood", "th_dark": "🌙 Dark", "kar_c_btn": "🎨 Color Kartela (75 Colors)", "kar_cnc_btn": "🚪 CNC Kapak Kartela (75 Designs)",
+        "th_blue": "🔵 Mavi", "th_wood": "🪵 Ahşap", "th_dark": "🌙 Gece", "kar_c_btn": "🎨 Renk Kartelası (75 Renk)", "kar_cnc_btn": "🚪 CNC Kapak Kartelası (75 Model)",
         "mat_lbl": "Malzeme Türü:", "sw_lbl": "Plaka Boyu (mm)", "sh_lbl": "Plaka Eni (mm)",
         "kerf_lbl": "Testere Payı (Kerf)", "rot_lbl": "Döndürme", "yes": "Serbest", "no": "Yasak",
         "pieces_lbl": "Ölçüler (Boy En Adet Kenar):",
@@ -766,10 +769,12 @@ HTML_TEMPLATE = """
             if (!cGrid || !cncGrid || cGrid.children.length > 0) return;
 
             const boardTypes = ['MDF 18mm', 'Suntalam 18mm', 'High Gloss', 'Akrilik', 'Lak MDF'];
-            const colorNames = [
-                'أبيض ثلجي', 'كريمي', 'بيج رملي', 'رمادي فاتح', 'أنثراسيت', 'أسود مطفي', 'جوز تركي', 'بلوط طبيعي', 'صنوبر', 'سنديان',
-                'ماهوجني', 'تييك', 'أزرق بترولي', 'أخضر زيتوني', 'تراكوتا'
-            ];
+            const colorNamesMap = {
+                ar: ['أبيض ثلجي', 'كريمي', 'بيج رملي', 'رمادي فاتح', 'أنثراسيت', 'أسود مطفي', 'جوز تركي', 'بلوط طبيعي', 'صنوبر', 'سنديان', 'ماهوجني', 'تييك', 'أزرق بترولي', 'أخضر زيتوني', 'تراكوتا'],
+                tr: ['Kar Beyazı', 'Krem', 'Kum Beji', 'Açık Gri', 'Antrasit', 'Mat Siyah', 'Türk Cevizi', 'Doğal Meşe', 'Çam', 'Meşe', 'Maun', 'Tik', 'Petrol Mavisi', 'Zeytin Yeşili', 'Terracotta'],
+                en: ['Snow White', 'Cream', 'Sand Beige', 'Light Grey', 'Anthracite', 'Matte Black', 'Turkish Walnut', 'Natural Oak', 'Pine', 'Oak', 'Mahogany', 'Teak', 'Petrol Blue', 'Olive Green', 'Terracotta']
+            };
+            const colorNames = colorNamesMap['{{ lang }}'] || colorNamesMap['ar'];
             let cHtml = '';
             for (let i = 0; i < 75; i++) {
                 const hue = (i * 29) % 360;
@@ -809,6 +814,44 @@ HTML_TEMPLATE = """
             cncGrid.innerHTML = cncHtml;
         }
         window.addEventListener('DOMContentLoaded', () => { setTimeout(initKartela, 300); });
+
+        
+        function showOffcut(w, h, mat) {
+            const box = document.getElementById('offcut_preview');
+            const info = document.getElementById('offcut_info');
+            const c = document.getElementById('offcut_canvas');
+            const btn = document.getElementById('use_offcut_btn');
+            if (!box || !c) return;
+            box.style.display = 'block';
+            info.innerText = `🪵 ${mat} — القياس: ${w} × ${h} مم`;
+            const ctx = c.getContext('2d');
+            ctx.clearRect(0, 0, c.width, c.height);
+            const sc = Math.min((c.width - 30) / w, (c.height - 30) / h);
+            const rw = w * sc, rh = h * sc;
+            const ox = (c.width - rw) / 2, oy = (c.height - rh) / 2;
+            ctx.fillStyle = '#fde68a';
+            ctx.strokeStyle = '#b45309';
+            ctx.lineWidth = 2;
+            ctx.fillRect(ox, oy, rw, rh);
+            ctx.strokeRect(ox, oy, rw, rh);
+            ctx.fillStyle = '#1e293b';
+            ctx.font = 'bold 12px Tahoma';
+            ctx.fillText(`${w} × ${h} mm`, ox + 6, oy + 16);
+            btn.onclick = function() {
+                document.querySelector('input[name="sw"]').value = w;
+                document.querySelector('input[name="sh"]').value = h;
+                openTab('tab1', document.querySelector('.tab-btn'));
+            };
+        }
+
+        async function delItem(kind, idx) {
+            if (!confirm('هل تريد حذف هذا السجل؟')) return;
+            try {
+                const res = await fetch(`/delete_${kind}/${idx}`, { method: 'POST' });
+                const d = await res.json();
+                if (d.ok) location.reload();
+            } catch (e) {}
+        }
 
         function setTheme(t) {
             document.body.className = t ? ('theme-' + t) : '';
@@ -859,9 +902,9 @@ HTML_TEMPLATE = """
 <div class="container">
     <div class="lang-bar" style="justify-content: space-between; align-items: center;">
         <div style="display:flex; gap:5px;">
-            <button type="button" onclick="setTheme('')" style="padding:5px 9px; border:none; border-radius:6px; cursor:pointer; font-size:12px; background:#2563eb; color:#fff;">🔵 أزرق</button>
-            <button type="button" onclick="setTheme('wood')" style="padding:5px 9px; border:none; border-radius:6px; cursor:pointer; font-size:12px; background:#8d6e63; color:#fff;">🪵 خشبي</button>
-            <button type="button" onclick="setTheme('dark')" style="padding:5px 9px; border:none; border-radius:6px; cursor:pointer; font-size:12px; background:#1e293b; color:#fff;">🌙 ليلي</button>
+            <button type="button" onclick="setTheme('')" style="padding:5px 9px; border:none; border-radius:6px; cursor:pointer; font-size:12px; background:#2563eb; color:#fff;">{{ t['th_blue'] }}</button>
+            <button type="button" onclick="setTheme('wood')" style="padding:5px 9px; border:none; border-radius:6px; cursor:pointer; font-size:12px; background:#8d6e63; color:#fff;">{{ t['th_wood'] }}</button>
+            <button type="button" onclick="setTheme('dark')" style="padding:5px 9px; border:none; border-radius:6px; cursor:pointer; font-size:12px; background:#1e293b; color:#fff;">{{ t['th_dark'] }}</button>
         </div>
         <div style="display:flex; gap:5px;">
             <a href="/?lang=ar" class="{{ 'active' if lang=='ar' else '' }}">🇸🇦 العربية</a>
@@ -933,14 +976,14 @@ HTML_TEMPLATE = """
             </div>
             <label>{{ t['pieces_lbl'] }}</label>
             <textarea id="pieces_box" name="pieces" rows="5" dir="ltr" lang="en" placeholder="{{ t['pieces_ph'] }}">{{ pieces_text }}</textarea>
-            <div style="margin:6px 0; font-size:12px; color:#64748b;">💡 نصيحة: أضف <b>G</b> بنهاية السطر لمنع التدوير (اتجاه العرق)، وأضف <b>2mm</b> للشريط السميك (مثال: <code>800 600 2 4 2mm G</code>)</div>
+            <div style="margin:6px 0; font-size:12px; color:#64748b;">{{ t['tip_grain']|safe }}</div>
             <label style="display:flex; align-items:center; gap:8px; font-weight:normal; cursor:pointer;">
-                <input type="checkbox" name="use_offcuts" value="1" checked style="width:auto;"> ♻️ استخدام البقايا المحفوظة تلقائياً قبل فتح لوح جديد
+                <input type="checkbox" name="use_offcuts" value="1" checked style="width:auto;"> {{ t['use_offcuts'] }}
             </label>
 
             <div class="row">
-                <div><label>👤 اسم الزبون (اختياري):</label><input type="text" name="cust_name" value="{{ cust_name }}" placeholder="{{ t['cust_ph'] }}"></div>
-                <div><label>💵 العربون المدفوع:</label><input type="text" inputmode="decimal" dir="ltr" name="deposit" value="{{ deposit }}"></div>
+                <div><label>{{ t['cust_lbl'] }}</label><input type="text" name="cust_name" value="{{ cust_name }}" placeholder="{{ t['cust_ph'] }}"></div>
+                <div><label>{{ t['dep_lbl'] }}</label><input type="text" inputmode="decimal" dir="ltr" name="deposit" value="{{ deposit }}"></div>
             </div>
             <label>{{ t['ocr_lbl'] }}</label>
             <div class="ocr-btns">
@@ -1056,12 +1099,19 @@ HTML_TEMPLATE = """
         
         <div id="tab5" class="tab-content">
             <h4 style="margin:6px 0;">♻️ بقايا الألواح الكبيرة (المخزون / Fire):</h4>
+            <div id="offcut_preview" style="display:none; margin-bottom:10px; padding:10px; border:2px solid #f59e0b; border-radius:10px; background:var(--inp-bg); text-align:center;">
+                <div id="offcut_info" style="font-weight:bold; font-size:14px; margin-bottom:6px;"></div>
+                <canvas id="offcut_canvas" width="240" height="120" style="max-width:100%; border:1px solid #cbd5e1; border-radius:6px; background:#fff;"></canvas>
+                <div style="margin-top:8px;">
+                    <button type="button" id="use_offcut_btn" style="padding:7px 14px; background:#10b981; color:#fff; border:none; border-radius:6px; font-weight:bold; cursor:pointer; font-size:12px;">📐 استخدم هذه القطعة كلوح قص</button>
+                </div>
+            </div>
             {% if offcuts %}
-                <div style="max-height:160px; overflow-y:auto; border:1px solid var(--inp-brd); border-radius:8px; padding:8px; background:var(--inp-bg); font-size:13px;">
+                <div style="max-height:170px; overflow-y:auto; border:1px solid var(--inp-brd); border-radius:8px; padding:8px; background:var(--inp-bg); font-size:13px;">
                 {% for o in offcuts %}
-                    <div style="display:flex; justify-content:space-between; padding:4px 0; border-bottom:1px dashed var(--inp-brd);">
-                        <span>🪵 {{ o.mat }} | <b>{{ o.w }} × {{ o.h }} مم</b></span>
-                        <span style="color:#64748b;">{{ o.date }}</span>
+                    <div style="display:flex; justify-content:space-between; align-items:center; gap:6px; padding:6px 0; border-bottom:1px dashed var(--inp-brd);">
+                        <span onclick="showOffcut({{ o.w }}, {{ o.h }}, '{{ o.mat }}')" style="cursor:pointer; flex:1;">🪵 {{ o.mat }} | <b>{{ o.w }} × {{ o.h }} مم</b> <span style="color:#64748b; font-size:11px;">({{ o.date }})</span></span>
+                        <button type="button" onclick="delItem('offcut', {{ loop.index0 }})" style="background:#ef4444; color:#fff; border:none; border-radius:6px; padding:4px 8px; cursor:pointer; font-size:12px;">🗑️</button>
                     </div>
                 {% endfor %}
                 </div>
@@ -1073,9 +1123,12 @@ HTML_TEMPLATE = """
             {% if ledger %}
                 <div style="max-height:220px; overflow-y:auto; border:1px solid var(--inp-brd); border-radius:8px; padding:8px; background:var(--inp-bg); font-size:13px;">
                 {% for l in ledger %}
-                    <div style="padding:6px 0; border-bottom:1px dashed var(--inp-brd);">
-                        <div><b>👤 {{ l.cust }}</b> ({{ l.date }}) - {{ l.mat }}</div>
-                        <div style="color:#059669;">الإجمالي: {{ l.total }} {{ l.curr }} | العربون: {{ l.dep }} | <b>المتبقي: {{ l.rem }} {{ l.curr }}</b></div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; gap:6px; padding:6px 0; border-bottom:1px dashed var(--inp-brd);">
+                        <div style="flex:1;">
+                            <div><b>👤 {{ l.cust }}</b> ({{ l.date }}) - {{ l.mat }}</div>
+                            <div style="color:#059669;">الإجمالي: {{ l.total }} {{ l.curr }} | العربون: {{ l.dep }} | <b>المتبقي: {{ l.rem }} {{ l.curr }}</b></div>
+                        </div>
+                        <button type="button" onclick="delItem('ledger', {{ loop.index0 }})" style="background:#ef4444; color:#fff; border:none; border-radius:6px; padding:4px 8px; cursor:pointer; font-size:12px;">🗑️</button>
                     </div>
                 {% endfor %}
                 </div>
@@ -1087,8 +1140,8 @@ HTML_TEMPLATE = """
         
         <div id="tab6" class="tab-content">
             <div style="display:flex; gap:8px; margin-bottom:12px;">
-                <button type="button" onclick="showKartela('colors')" style="flex:1; padding:10px; border:none; border-radius:8px; background:#2563eb; color:#fff; font-weight:bold; cursor:pointer;">🎨 قارتيلا الألوان (75 لون)</button>
-                <button type="button" onclick="showKartela('cnc')" style="flex:1; padding:10px; border:none; border-radius:8px; background:#b45309; color:#fff; font-weight:bold; cursor:pointer;">🚪 قارتيلا كاباك CNC (75 تصميم)</button>
+                <button type="button" onclick="showKartela('colors')" style="flex:1; padding:10px; border:none; border-radius:8px; background:#2563eb; color:#fff; font-weight:bold; cursor:pointer;">{{ t['kar_c_btn'] }}</button>
+                <button type="button" onclick="showKartela('cnc')" style="flex:1; padding:10px; border:none; border-radius:8px; background:#b45309; color:#fff; font-weight:bold; cursor:pointer;">{{ t['kar_cnc_btn'] }}</button>
             </div>
             <div id="kar_colors_grid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(90px, 1fr)); gap:10px; max-height:420px; overflow-y:auto; padding:6px;"></div>
             <div id="kar_cnc_grid" style="display:none; grid-template-columns:repeat(auto-fill, minmax(95px, 1fr)); gap:10px; max-height:420px; overflow-y:auto; padding:6px;"></div>
@@ -1217,6 +1270,29 @@ def etiket_view(oid):
     <body style="background:#f1f5f9; padding:12px;">
     <button onclick="window.print()" style="padding:10px 20px; background:#2563eb; color:#fff; border:none; border-radius:6px; font-weight:bold; cursor:pointer; margin-bottom:12px;">🖨️ طباعة الملصقات</button>
     <div>{cards_html}</div></body></html>"""
+
+
+@app.route("/delete_offcut/<int:idx>", methods=["POST"])
+def delete_offcut(idx):
+    st = load_store(force=True)
+    lst = st.get("offcuts", [])
+    real_idx = len(lst) - 1 - idx
+    if 0 <= real_idx < len(lst):
+        lst.pop(real_idx)
+        st["offcuts"] = lst
+        save_store(st)
+    return jsonify({"ok": True})
+
+@app.route("/delete_ledger/<int:idx>", methods=["POST"])
+def delete_ledger(idx):
+    st = load_store(force=True)
+    lst = st.get("ledger", [])
+    real_idx = len(lst) - 1 - idx
+    if 0 <= real_idx < len(lst):
+        lst.pop(real_idx)
+        st["ledger"] = lst
+        save_store(st)
+    return jsonify({"ok": True})
 
 @app.route("/health", methods=["GET"])
 def health():
