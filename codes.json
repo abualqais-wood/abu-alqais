@@ -146,6 +146,13 @@
       "loc": "Turkey - Altınkum",
       "time": "2026-11-11 17:17",
       "ref": "مباشر"
+    },
+    {
+      "ip": "35.230.28.204",
+      "device": "Go-http-client/2.0",
+      "loc": "United States - The Dalles",
+      "time": "2026-11-11 17:18",
+      "ref": "مباشر"
     }
   ]
 }
