@@ -1,5 +1,13 @@
 {
-  "codes": {},
+  "codes": {
+    "QAIS-PRO-1035-JI": {
+      "used": false,
+      "tier": "pro",
+      "created_at": 1794415711,
+      "used_at": null,
+      "used_by": null
+    }
+  },
   "tg_users": {
     "5573064206": {
       "trial_used": true,
