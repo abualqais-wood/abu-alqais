@@ -148,11 +148,11 @@ TR = {
     "ar": {
         "dir": "rtl", "title": "أبو القيس - نظام النجارة المتكامل",
         "sub": "نظام تقطيع الأخشاب والتسعير | هاتف: " + WORKSHOP_PHONE,
-        "tab_cut": "📐 التقطيع والطلب", "tab_set": "⚙️ الأسعار والعملات", "tab_acc": "🔩 الإكسسوارات", "tab_tpl": "🧊 قوالب 3D", "tab_led": "♻️ المخزون (البقايا)", "tab_kar": "🎨 قارتيلا 1000+1000",
+        "tab_cut": "📐 التقطيع والطلب", "tab_set": "⚙️ الأسعار والعملات", "tab_acc": "🔩 الإكسسوارات", "tab_tpl": "🧊 قوالب 3D", "tab_led": "♻️ المخزون (البقايا)", "tab_kar": "🎨 قارتيلا 75+75",
         "badge_pro": "⭐ عضو PRO مميز — أنت من نخبة المحترفين!",
         "badge_promax": "🔥 عضو PRO MAX — ورشتك تعمل باحترافية عالية!",
         "badge_ultra": "👑 عضو ULTRA VIP — القمة في عالم النجارة والتقطيع!",
-        "th_blue": "🔵 أزرق", "th_wood": "🪵 خشبي", "th_dark": "🌙 ليلي", "kar_c_btn": "🎨 قارتيلا الألوان (1000 لون)", "kar_cnc_btn": "🚪 قارتيلا كاباك CNC (1000 تصميم)",
+        "th_blue": "🔵 أزرق", "th_wood": "🪵 خشبي", "th_dark": "🌙 ليلي", "kar_c_btn": "🎨 قارتيلا الألوان (75 لون)", "kar_cnc_btn": "🚪 قارتيلا كاباك CNC (75 تصميم)",
         "mat_lbl": "نوع الخشب:", "sw_lbl": "طول اللوح (مم)", "sh_lbl": "عرض اللوح (مم)",
         "kerf_lbl": "سمك المنشار (Kerf)", "rot_lbl": "تدوير القطع", "yes": "مسموح", "no": "ممنوع",
         "pieces_lbl": "المقاسات (الطول العرض العدد الحواف):",
@@ -188,20 +188,20 @@ TR = {
         "tier_max": "🔸 باقة Pro Max — 450 TL / شهرياً",
         "tier_max_d": "كل ميزات Pro + اسم الورشة + دفتر الورشة والمخزون + رابط عامل المنشار + واتساب",
         "tier_ult": "👑 باقة Ultra — 750 TL / شهرياً",
-        "tier_ult_d": "كل ميزات Pro Max + تصدير CNC CSV + قارتيلا 1000+1000 + PDF + ملصقات Etiket"
+        "tier_ult_d": "كل ميزات Pro Max + تصدير CNC CSV + قارتيلا 75+75 + PDF + ملصقات Etiket"
     },
     "tr": {
         "dir": "ltr", "title": "Abu Al-Qais - Kesim Optimizasyon",
         "sub": "Ahşap Kesim ve Maliyet Sistemi | Tel: " + WORKSHOP_PHONE,
-        "tab_cut": "📐 Kesim & Sipariş", "tab_set": "⚙️ Fiyat & Döviz", "tab_acc": "🔩 Aksesuar", "tab_tpl": "🧊 3D Şablonlar", "tab_led": "♻️ Fire & Stok", "tab_kar": "🎨 Kartela 1000+1000",
+        "tab_cut": "📐 Kesim & Sipariş", "tab_set": "⚙️ Fiyat & Döviz", "tab_acc": "🔩 Aksesuar", "tab_tpl": "🧊 3D Şablonlar", "tab_led": "♻️ Fire & Stok", "tab_kar": "🎨 Kartela 75+75",
         "badge_pro": "⭐ PRO MEMBER — You are among the Elite Professionals!",
         "badge_promax": "🔥 PRO MAX MEMBER — Your Workshop Runs at Peak Professionalism!",
         "badge_ultra": "👑 ULTRA VIP MEMBER — You are at the Pinnacle of Woodwork!",
         "badge_pro": "⭐ PRO ÜYE — Profesyonellerin Seçkin Üyesisiniz!",
         "badge_promax": "🔥 PRO MAX ÜYE — Atölyeniz Üst Düzey Profesyonellikle Çalışıyor!",
         "badge_ultra": "👑 ULTRA VIP ÜYE — Marangozluk ve Kesim Dünyasının Zirvesindesiniz!",
-        "th_blue": "🔵 Blue", "th_wood": "🪵 Wood", "th_dark": "🌙 Dark", "kar_c_btn": "🎨 Color Kartela (1000 Colors)", "kar_cnc_btn": "🚪 CNC Kapak Kartela (1000 Designs)",
-        "th_blue": "🔵 Mavi", "th_wood": "🪵 Ahşap", "th_dark": "🌙 Gece", "kar_c_btn": "🎨 Renk Kartelası (1000 Renk)", "kar_cnc_btn": "🚪 CNC Kapak Kartelası (1000 Model)",
+        "th_blue": "🔵 Blue", "th_wood": "🪵 Wood", "th_dark": "🌙 Dark", "kar_c_btn": "🎨 Color Kartela (75 Colors)", "kar_cnc_btn": "🚪 CNC Kapak Kartela (75 Designs)",
+        "th_blue": "🔵 Mavi", "th_wood": "🪵 Ahşap", "th_dark": "🌙 Gece", "kar_c_btn": "🎨 Renk Kartelası (75 Renk)", "kar_cnc_btn": "🚪 CNC Kapak Kartelası (75 Model)",
         "mat_lbl": "Malzeme Türü:", "sw_lbl": "Plaka Boyu (mm)", "sh_lbl": "Plaka Eni (mm)",
         "kerf_lbl": "Testere Payı (Kerf)", "rot_lbl": "Döndürme", "yes": "Serbest", "no": "Yasak",
         "pieces_lbl": "Ölçüler (Boy En Adet Kenar):",
@@ -237,12 +237,12 @@ TR = {
         "tier_max": "🔸 Pro Max Paket — 450 TL / Aylık",
         "tier_max_d": "Tüm Pro özellikleri + Atölye Adı + Defter & Fire + Kesimci Linki + WhatsApp",
         "tier_ult": "👑 Ultra Paket — 750 TL / Aylık",
-        "tier_ult_d": "Tüm Pro Max özellikleri + CNC CSV + 1000+1000 Kartela + PDF + Etiket"
+        "tier_ult_d": "Tüm Pro Max özellikleri + CNC CSV + 75+75 Kartela + PDF + Etiket"
     },
     "en": {
         "dir": "ltr", "title": "Abu Al-Qais - Woodwork Pro",
         "sub": "Cutting & Costing System | Tel: " + WORKSHOP_PHONE,
-        "tab_cut": "📐 Cutting", "tab_set": "⚙️ Prices & Currency", "tab_acc": "🔩 Hardware", "tab_tpl": "🧊 3D Templates", "tab_led": "♻️ Offcuts", "tab_kar": "🎨 Kartela 1000+1000",
+        "tab_cut": "📐 Cutting", "tab_set": "⚙️ Prices & Currency", "tab_acc": "🔩 Hardware", "tab_tpl": "🧊 3D Templates", "tab_led": "♻️ Offcuts", "tab_kar": "🎨 Kartela 75+75",
         "mat_lbl": "Material:", "sw_lbl": "Sheet Length (mm)", "sh_lbl": "Sheet Width (mm)",
         "kerf_lbl": "Saw Kerf (mm)", "rot_lbl": "Rotation", "yes": "Allowed", "no": "Forbidden",
         "pieces_lbl": "Dimensions (L W Qty Edges):",
@@ -278,7 +278,7 @@ TR = {
         "tier_max": "🔸 Pro Max Plan — 450 TL / Month",
         "tier_max_d": "All Pro features + Workshop Name + Ledger & Offcuts + Saw Link + WhatsApp",
         "tier_ult": "👑 Ultra Plan — 750 TL / Month",
-        "tier_ult_d": "All Pro Max features + CNC CSV + 1000+1000 Kartela + PDF + Etiket Labels"
+        "tier_ult_d": "All Pro Max features + CNC CSV + 75+75 Kartela + PDF + Etiket Labels"
     }
 }
 
@@ -790,7 +790,7 @@ HTML_TEMPLATE = """
             };
             const colorNames = colorNamesMap['{{ lang }}'] || colorNamesMap['ar'];
             let cHtml = '';
-            for (let i = 0; i < 1000; i++) {
+            for (let i = 0; i < 75; i++) {
                 const hue = (i * 29) % 360;
                 const sat = (i % 5 === 0) ? 8 : (35 + (i % 4) * 15);
                 const lig = 22 + ((i * 7) % 65);
@@ -807,7 +807,7 @@ HTML_TEMPLATE = """
             cGrid.innerHTML = cHtml;
 
             let cncHtml = '';
-            for (let i = 1; i <= 1000; i++) {
+            for (let i = 1; i <= 75; i++) {
                 const mode = i % 8;
                 let inner = '';
                 if (mode === 0) inner = `<rect x="12" y="12" width="56" height="86" fill="none" stroke="#8d6e63" stroke-width="2"/><rect x="20" y="20" width="40" height="70" fill="none" stroke="#8d6e63" stroke-width="1.5"/>`;
@@ -1012,7 +1012,7 @@ HTML_TEMPLATE = """
             </div>
             <div style="background:#fff; padding:10px; border-radius:8px; border:2px solid #b45309;">
                 <b>👑 باقة Ultra — 750 TL / شهرياً</b><br>
-                <span style="font-size:12px; color:#475569;">كل ميزات Pro Max + تصدير CNC CSV + قارتيلا 1000+1000 + PDF + ملصقات Etiket</span>
+                <span style="font-size:12px; color:#475569;">كل ميزات Pro Max + تصدير CNC CSV + قارتيلا 75+75 + PDF + ملصقات Etiket</span>
             </div>
         </div>
         <div class="iban">{{ iban }}</div>
