@@ -13,6 +13,13 @@
       "created_at": 1794465508,
       "used_at": null,
       "used_by": null
+    },
+    "QAIS-PRO-7898-EG": {
+      "used": false,
+      "tier": "pro",
+      "created_at": 1794512605,
+      "used_at": null,
+      "used_by": null
     }
   },
   "tg_users": {
