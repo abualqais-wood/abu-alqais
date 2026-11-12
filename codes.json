@@ -6,6 +6,13 @@
       "created_at": 1794415711,
       "used_at": null,
       "used_by": null
+    },
+    "QAIS-PRO-3756-LE": {
+      "used": false,
+      "tier": "pro",
+      "created_at": 1794465508,
+      "used_at": null,
+      "used_by": null
     }
   },
   "tg_users": {
