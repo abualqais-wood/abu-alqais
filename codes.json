@@ -30,6 +30,10 @@
     "340417520": {
       "trial_used": true,
       "pro_until": 0
+    },
+    "-1001445246756": {
+      "trial_used": false,
+      "pro_until": 0
     }
   },
   "banned": [],
