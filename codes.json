@@ -151,6 +151,13 @@
       "loc": "Türkiye - Adana",
       "time": "2026-11-13 14:07",
       "ref": "مباشر"
+    },
+    {
+      "ip": "46.221.191.8",
+      "device": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome",
+      "loc": "Turkey - Kurttepe",
+      "time": "2026-11-17 19:38",
+      "ref": "مباشر"
     }
   ]
 }
