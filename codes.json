@@ -170,6 +170,13 @@
       "loc": "Türkiye - Istanbul",
       "time": "2026-11-21 06:22",
       "ref": "مباشر"
+    },
+    {
+      "ip": "46.221.134.91",
+      "device": "Dalvik/2.1.0 (Linux; U; Android 13; 22101316G Build/TP1A.220624.014)",
+      "loc": "Turkey - Solaklı",
+      "time": "2026-11-21 08:11",
+      "ref": "مباشر"
     }
   ]
 }
