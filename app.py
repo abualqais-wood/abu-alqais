@@ -149,12 +149,20 @@ TR = {
         "dir": "rtl", "title": "أبو القيس - نظام النجارة المتكامل",
         "sub": "نظام تقطيع الأخشاب والتسعير | هاتف: " + WORKSHOP_PHONE,
         "tab_cut": "📐 التقطيع والطلب", "tab_set": "⚙️ الأسعار والعملات", "tab_acc": "🔩 الإكسسوارات", "tab_tpl": "🧊 قوالب 3D", "tab_led": "♻️ المخزون (البقايا)", "tab_kar": "🎨 قارتيلا 75+75",
+        "tab_admin": "👑 الإدارة",
         "badge_pro": "⭐ عضو PRO مميز — أنت من نخبة المحترفين!",
         "badge_promax": "🔥 عضو PRO MAX — ورشتك تعمل باحترافية عالية!",
         "badge_ultra": "👑 عضو ULTRA VIP — القمة في عالم النجارة والتقطيع!",
-        "th_blue": "🔵 أزرق", "th_wood": "🪵 خشبي", "th_dark": "🌙 ليلي", "kar_c_btn": "🎨 قارتيلا الألوان (75 لون)", "kar_cnc_btn": "🚪 قارتيلا كاباك CNC (75 تصميم)",
+        "th_blue": "🔵 أزرق", "th_wood": "🪵 خشبي", "th_dark": "🌙 ليلي",
+        "kar_c_btn": "🎨 قارتيلا الألوان (75 لون)", "kar_cnc_btn": "🚪 قارتيلا كاباك CNC (75 تصميم)",
         "mat_lbl": "نوع الخشب:", "sw_lbl": "طول اللوح (مم)", "sh_lbl": "عرض اللوح (مم)",
         "kerf_lbl": "سمك المنشار (Kerf)", "rot_lbl": "تدوير القطع", "yes": "مسموح", "no": "ممنوع",
+        "qa_title": "⚡ إضافة سريعة (الطول × العرض × العدد + أطراف اللزق):",
+        "qa_l": "الطول", "qa_w": "العرض", "qa_q": "العدد",
+        "qa_edge_btn": "🎀 تحديد أطراف اللزق (طويل / قصير) ▾",
+        "qa_e_all": "4 أطراف (2 طويل + 2 قصير)", "qa_e_l1": "1 طويل", "qa_e_w1": "1 قصير",
+        "qa_cb_l1": "طويل 1", "qa_cb_l2": "طويل 2", "qa_cb_w1": "قصير 1", "qa_cb_w2": "قصير 2",
+        "qa_add_btn": "➕ إضافة القطعة للقائمة",
         "pieces_lbl": "المقاسات (الطول العرض العدد الحواف):",
         "pieces_ph": "800 600 4 2\n1200 400 2 LL\n450 300 6",
         "ocr_lbl": "📸 قراءة فورية بالذكاء الاصطناعي (كاميرا أو صورة):",
@@ -162,10 +170,34 @@ TR = {
         "gal_btn": "🖼️ اختيار صورة",
         "reading": "⏳ جاري قراءة المقاسات من الصورة...",
         "curr_lbl": "العملة:", "rate_usd": "سعر الدولار (TL)", "rate_eur": "سعر اليورو (TL)",
-        "p_sheet": "سعر اللوح (TL)", "p_pvc": "سعر متر PVC (TL)", "p_cut": "أجرة قص اللوح (TL)", "margin": "هامش الربح (%)",
+        "p_sheet": "سعر اللوح (TL)", "p_pvc": "شريط PVC 0.4mm (TL)", "p_pvc2": "شريط PVC 2mm (TL)",
+        "p_cut": "أجرة قص اللوح (TL)", "margin": "هامش الربح (%)",
+        "ws_name_lbl": "🏷️ اسم الورشة (للفاتورة):", "ws_phone_lbl": "📞 هاتف الورشة:",
+        "inv_mode_lbl": "📄 نوع الفاتورة:",
+        "inv_mode_ws": "🔧 نسخة الورشة (تظهر الهدر والتفاصيل)",
+        "inv_mode_cust": "🤝 عرض سعر للزبون (يخفي الهدر)",
         "acc_hinge": "عدد المفصلات (Menteşe)", "acc_hinge_p": "سعر المفصلة (TL)",
         "acc_rail": "عدد سكك الجوارير (Ray)", "acc_rail_p": "سعر السكة (TL)",
         "acc_handle": "عدد المقابض (Kulp)", "acc_handle_p": "سعر المقبض (TL)",
+        "tpl_choose": "🧊 اختر قالباً جاهزاً (22+ نموذج):",
+        "tpl_grp_ward": "🚪 خزائن وملابس",
+        "tpl_wardrobe2": "خزانة ملابس ببابين", "tpl_wardrobe3": "خزانة ملابس 3 أبواب",
+        "tpl_wardrobe_slide": "خزانة سحاب (جرار)", "tpl_shoe_cab": "خزانة أحذية",
+        "tpl_bookcase": "مكتبة / رفوف مفتوحة (4 رفوف)",
+        "tpl_grp_kit": "🍳 مطابخ",
+        "tpl_kit_base": "خزانة مطبخ سفلية (بابين)", "tpl_kit_wall": "خزانة مطبخ علوية (بابين)",
+        "tpl_kit_drawers": "وحدة أدراج مطبخ (3 دروج)", "tpl_kit_tall": "خزانة مطبخ عالية (ثلاجة/فرن)",
+        "tpl_grp_bed": "🛏️ غرف نوم وأدراج",
+        "tpl_nightstand": "كومودينو (طاولة سرير 2 درج)", "tpl_chiffonier": "شفونير (4 دروج)",
+        "tpl_dresser": "تسريحة مع أدراج", "tpl_bed_single": "هيكل سرير مفرد", "tpl_bed_double": "هيكل سرير مزدوج",
+        "tpl_grp_tbl": "🪑 طاولات ومكاتب وكراسي",
+        "tpl_table_dining": "طاولة طعام مستطيلة", "tpl_table_coffee": "طاولة قهوة / وسط",
+        "tpl_desk_office": "مكتب دراسة / عمل", "tpl_tv_unit": "طاولة تلفزيون (TV Ünitesi)",
+        "tpl_chair_simple": "كرسي خشبي بسيط", "tpl_bench_storage": "بنش / مقعد مع تخزين",
+        "tpl_storage_box": "صندوق تخزين (مطمورة)",
+        "tpl_h": "الارتفاع H (مم)", "tpl_w": "العرض W (مم)", "tpl_d": "العمق D (مم)",
+        "tpl_rot_r": "⬅️ يمين", "tpl_rot_l": "يسار ➡️",
+        "tpl_apply_btn": "📥 توليد المقاسات وإضافتها للتقطيع",
         "btn_calc": "🚀 احسب التقطيع وأصدر الفاتورة",
         "inv_title": "🧾 الفاتورة الجاهزة للزبون:", "dl_btn": "⬇️ تحميل الصورة",
         "sheets_title": "📐 مخططات التقطيع:",
@@ -188,22 +220,30 @@ TR = {
         "tier_max": "🔸 باقة Pro Max — 450 TL / شهرياً",
         "tier_max_d": "كل ميزات Pro + اسم الورشة + دفتر الورشة والمخزون + رابط عامل المنشار + واتساب",
         "tier_ult": "👑 باقة Ultra — 750 TL / شهرياً",
-        "tier_ult_d": "كل ميزات Pro Max + تصدير CNC CSV + قارتيلا 75+75 + PDF + ملصقات Etiket"
+        "tier_ult_d": "كل ميزات Pro Max + تصدير CNC CSV + قارتيلا 75+75 + PDF + ملصقات Etiket",
+        "js_enter_lw": "أدخل الطول والعرض",
+        "js_conn_err": "❌ خطأ في الاتصال بالسيرفر",
+        "js_picked": "تم اختيار:",
+        "js_cnc_ready": "جاهز للتنفيذ"
     },
     "tr": {
         "dir": "ltr", "title": "Abu Al-Qais - Kesim Optimizasyon",
         "sub": "Ahşap Kesim ve Maliyet Sistemi | Tel: " + WORKSHOP_PHONE,
         "tab_cut": "📐 Kesim & Sipariş", "tab_set": "⚙️ Fiyat & Döviz", "tab_acc": "🔩 Aksesuar", "tab_tpl": "🧊 3D Şablonlar", "tab_led": "♻️ Fire & Stok", "tab_kar": "🎨 Kartela 75+75",
-        "badge_pro": "⭐ PRO MEMBER — You are among the Elite Professionals!",
-        "badge_promax": "🔥 PRO MAX MEMBER — Your Workshop Runs at Peak Professionalism!",
-        "badge_ultra": "👑 ULTRA VIP MEMBER — You are at the Pinnacle of Woodwork!",
+        "tab_admin": "👑 Yönetim",
         "badge_pro": "⭐ PRO ÜYE — Profesyonellerin Seçkin Üyesisiniz!",
         "badge_promax": "🔥 PRO MAX ÜYE — Atölyeniz Üst Düzey Profesyonellikle Çalışıyor!",
         "badge_ultra": "👑 ULTRA VIP ÜYE — Marangozluk ve Kesim Dünyasının Zirvesindesiniz!",
-        "th_blue": "🔵 Blue", "th_wood": "🪵 Wood", "th_dark": "🌙 Dark", "kar_c_btn": "🎨 Color Kartela (75 Colors)", "kar_cnc_btn": "🚪 CNC Kapak Kartela (75 Designs)",
-        "th_blue": "🔵 Mavi", "th_wood": "🪵 Ahşap", "th_dark": "🌙 Gece", "kar_c_btn": "🎨 Renk Kartelası (75 Renk)", "kar_cnc_btn": "🚪 CNC Kapak Kartelası (75 Model)",
+        "th_blue": "🔵 Mavi", "th_wood": "🪵 Ahşap", "th_dark": "🌙 Gece",
+        "kar_c_btn": "🎨 Renk Kartelası (75 Renk)", "kar_cnc_btn": "🚪 CNC Kapak Kartelası (75 Model)",
         "mat_lbl": "Malzeme Türü:", "sw_lbl": "Plaka Boyu (mm)", "sh_lbl": "Plaka Eni (mm)",
         "kerf_lbl": "Testere Payı (Kerf)", "rot_lbl": "Döndürme", "yes": "Serbest", "no": "Yasak",
+        "qa_title": "⚡ Hızlı Ekleme (Boy × En × Adet + Kenar Bantları):",
+        "qa_l": "Boy", "qa_w": "En", "qa_q": "Adet",
+        "qa_edge_btn": "🎀 Kenar Bantlarını Seç (Uzun / Kısa) ▾",
+        "qa_e_all": "4 Kenar (2 Uzun + 2 Kısa)", "qa_e_l1": "1 Uzun", "qa_e_w1": "1 Kısa",
+        "qa_cb_l1": "Uzun 1", "qa_cb_l2": "Uzun 2", "qa_cb_w1": "Kısa 1", "qa_cb_w2": "Kısa 2",
+        "qa_add_btn": "➕ Parçayı Listeye Ekle",
         "pieces_lbl": "Ölçüler (Boy En Adet Kenar):",
         "pieces_ph": "800 600 4 2\n1200 400 2 LL\n450 300 6",
         "ocr_lbl": "📸 Yapay Zeka ile Anında Okuma (Kamera veya Fotoğraf):",
@@ -211,10 +251,34 @@ TR = {
         "gal_btn": "🖼️ Galeriden Seç",
         "reading": "⏳ Ölçüler okunuyor...",
         "curr_lbl": "Para Birimi:", "rate_usd": "Dolar Kuru (TL)", "rate_eur": "Euro Kuru (TL)",
-        "p_sheet": "Plaka Fiyatı (TL)", "p_pvc": "PVC Metre (TL)", "p_cut": "Kesim Ücreti (TL)", "margin": "Kar Marjı (%)",
+        "p_sheet": "Plaka Fiyatı (TL)", "p_pvc": "PVC Bant 0.4mm (TL)", "p_pvc2": "PVC Bant 2mm (TL)",
+        "p_cut": "Kesim Ücreti (TL)", "margin": "Kar Marjı (%)",
+        "ws_name_lbl": "🏷️ Atölye Adı (Fatura İçin):", "ws_phone_lbl": "📞 Atölye Telefonu:",
+        "inv_mode_lbl": "📄 Fatura Türü:",
+        "inv_mode_ws": "🔧 Atölye Nüshası (Fire ve detaylar görünür)",
+        "inv_mode_cust": "🤝 Müşteri Teklifi (Fire gizlenir)",
         "acc_hinge": "Menteşe Adedi", "acc_hinge_p": "Menteşe Fiyatı (TL)",
         "acc_rail": "Çekmece Rayı", "acc_rail_p": "Ray Fiyatı (TL)",
         "acc_handle": "Kulp Adedi", "acc_handle_p": "Kulp Fiyatı (TL)",
+        "tpl_choose": "🧊 Hazır Şablon Seçin (22+ Model):",
+        "tpl_grp_ward": "🚪 Gardırop ve Dolaplar",
+        "tpl_wardrobe2": "2 Kapaklı Gardırop", "tpl_wardrobe3": "3 Kapaklı Gardırop",
+        "tpl_wardrobe_slide": "Sürgülü Gardırop", "tpl_shoe_cab": "Ayakkabılık",
+        "tpl_bookcase": "Kitaplık / Açık Raf (4 Raflı)",
+        "tpl_grp_kit": "🍳 Mutfak Dolapları",
+        "tpl_kit_base": "Alt Mutfak Dolabı (2 Kapaklı)", "tpl_kit_wall": "Üst Mutfak Dolabı (2 Kapaklı)",
+        "tpl_kit_drawers": "Mutfak Çekmece Modülü (3 Çekmeceli)", "tpl_kit_tall": "Boy Mutfak Dolabı (Fırın/Buzdolabı)",
+        "tpl_grp_bed": "🛏️ Yatak Odası ve Şifonyer",
+        "tpl_nightstand": "Komodin (2 Çekmeceli)", "tpl_chiffonier": "Şifonyer (4 Çekmeceli)",
+        "tpl_dresser": "Makyaj Masası (Çekmeceli)", "tpl_bed_single": "Tek Kişilik Karyola", "tpl_bed_double": "Çift Kişilik Karyola",
+        "tpl_grp_tbl": "🪑 Masa, Çalışma Masası ve Sandalye",
+        "tpl_table_dining": "Dikdörtgen Yemek Masası", "tpl_table_coffee": "Orta Sehpa",
+        "tpl_desk_office": "Çalışma / Ofis Masası", "tpl_tv_unit": "TV Ünitesi",
+        "tpl_chair_simple": "Ahşap Sandalye", "tpl_bench_storage": "Depolamalı Bank / Oturak",
+        "tpl_storage_box": "Depolama Sandığı",
+        "tpl_h": "Yükseklik H (mm)", "tpl_w": "Genişlik W (mm)", "tpl_d": "Derinlik D (mm)",
+        "tpl_rot_r": "⬅️ Sağ", "tpl_rot_l": "Sol ➡️",
+        "tpl_apply_btn": "📥 Ölçüleri Oluştur ve Kesime Ekle",
         "btn_calc": "🚀 Hesapla ve Fatura Oluştur",
         "inv_title": "🧾 Müşteri Faturası:", "dl_btn": "⬇️ Resmi İndir",
         "sheets_title": "📐 Kesim Planları:",
@@ -237,14 +301,30 @@ TR = {
         "tier_max": "🔸 Pro Max Paket — 450 TL / Aylık",
         "tier_max_d": "Tüm Pro özellikleri + Atölye Adı + Defter & Fire + Kesimci Linki + WhatsApp",
         "tier_ult": "👑 Ultra Paket — 750 TL / Aylık",
-        "tier_ult_d": "Tüm Pro Max özellikleri + CNC CSV + 75+75 Kartela + PDF + Etiket"
+        "tier_ult_d": "Tüm Pro Max özellikleri + CNC CSV + 75+75 Kartela + PDF + Etiket",
+        "js_enter_lw": "Boy ve en giriniz",
+        "js_conn_err": "❌ Sunucu bağlantı hatası",
+        "js_picked": "Seçildi:",
+        "js_cnc_ready": "Üretime hazır"
     },
     "en": {
         "dir": "ltr", "title": "Abu Al-Qais - Woodwork Pro",
         "sub": "Cutting & Costing System | Tel: " + WORKSHOP_PHONE,
         "tab_cut": "📐 Cutting", "tab_set": "⚙️ Prices & Currency", "tab_acc": "🔩 Hardware", "tab_tpl": "🧊 3D Templates", "tab_led": "♻️ Offcuts", "tab_kar": "🎨 Kartela 75+75",
+        "tab_admin": "👑 Admin",
+        "badge_pro": "⭐ PRO MEMBER — You are among the Elite Professionals!",
+        "badge_promax": "🔥 PRO MAX MEMBER — Your Workshop Runs at Peak Professionalism!",
+        "badge_ultra": "👑 ULTRA VIP MEMBER — You are at the Pinnacle of Woodwork!",
+        "th_blue": "🔵 Blue", "th_wood": "🪵 Wood", "th_dark": "🌙 Dark",
+        "kar_c_btn": "🎨 Color Kartela (75 Colors)", "kar_cnc_btn": "🚪 CNC Door Kartela (75 Designs)",
         "mat_lbl": "Material:", "sw_lbl": "Sheet Length (mm)", "sh_lbl": "Sheet Width (mm)",
         "kerf_lbl": "Saw Kerf (mm)", "rot_lbl": "Rotation", "yes": "Allowed", "no": "Forbidden",
+        "qa_title": "⚡ Quick Add (Length × Width × Qty + Edge Banding):",
+        "qa_l": "Length", "qa_w": "Width", "qa_q": "Qty",
+        "qa_edge_btn": "🎀 Select Edge Banding (Long / Short) ▾",
+        "qa_e_all": "4 Edges (2 Long + 2 Short)", "qa_e_l1": "1 Long", "qa_e_w1": "1 Short",
+        "qa_cb_l1": "Long 1", "qa_cb_l2": "Long 2", "qa_cb_w1": "Short 1", "qa_cb_w2": "Short 2",
+        "qa_add_btn": "➕ Add Piece to List",
         "pieces_lbl": "Dimensions (L W Qty Edges):",
         "pieces_ph": "800 600 4 2\n1200 400 2 LL\n450 300 6",
         "ocr_lbl": "📸 Instant AI Reading (Camera or Photo):",
@@ -252,10 +332,34 @@ TR = {
         "gal_btn": "🖼️ Choose Image",
         "reading": "⏳ Reading dimensions...",
         "curr_lbl": "Currency:", "rate_usd": "USD Rate (TL)", "rate_eur": "EUR Rate (TL)",
-        "p_sheet": "Sheet Price (TL)", "p_pvc": "PVC / m (TL)", "p_cut": "Cutting Fee (TL)", "margin": "Profit (%)",
+        "p_sheet": "Sheet Price (TL)", "p_pvc": "PVC Band 0.4mm (TL)", "p_pvc2": "PVC Band 2mm (TL)",
+        "p_cut": "Cutting Fee (TL)", "margin": "Profit (%)",
+        "ws_name_lbl": "🏷️ Workshop Name (Invoice):", "ws_phone_lbl": "📞 Workshop Phone:",
+        "inv_mode_lbl": "📄 Invoice Mode:",
+        "inv_mode_ws": "🔧 Workshop Copy (Shows waste & details)",
+        "inv_mode_cust": "🤝 Customer Quote (Hides waste)",
         "acc_hinge": "Hinges Qty", "acc_hinge_p": "Hinge Price (TL)",
         "acc_rail": "Drawer Rails Qty", "acc_rail_p": "Rail Price (TL)",
         "acc_handle": "Handles Qty", "acc_handle_p": "Handle Price (TL)",
+        "tpl_choose": "🧊 Choose Ready Template (22+ Models):",
+        "tpl_grp_ward": "🚪 Wardrobes & Cabinets",
+        "tpl_wardrobe2": "2-Door Wardrobe", "tpl_wardrobe3": "3-Door Wardrobe",
+        "tpl_wardrobe_slide": "Sliding Door Wardrobe", "tpl_shoe_cab": "Shoe Cabinet",
+        "tpl_bookcase": "Bookcase / Open Shelves (4 Shelves)",
+        "tpl_grp_kit": "🍳 Kitchen Cabinets",
+        "tpl_kit_base": "Kitchen Base Cabinet (2 Doors)", "tpl_kit_wall": "Kitchen Wall Cabinet (2 Doors)",
+        "tpl_kit_drawers": "Kitchen Drawer Unit (3 Drawers)", "tpl_kit_tall": "Kitchen Tall Cabinet (Oven/Fridge)",
+        "tpl_grp_bed": "🛏️ Bedroom & Drawers",
+        "tpl_nightstand": "Nightstand (2 Drawers)", "tpl_chiffonier": "Chiffonier (4 Drawers)",
+        "tpl_dresser": "Dresser with Drawers", "tpl_bed_single": "Single Bed Frame", "tpl_bed_double": "Double Bed Frame",
+        "tpl_grp_tbl": "🪑 Tables, Desks & Chairs",
+        "tpl_table_dining": "Rectangular Dining Table", "tpl_table_coffee": "Coffee / Center Table",
+        "tpl_desk_office": "Study / Office Desk", "tpl_tv_unit": "TV Stand Unit",
+        "tpl_chair_simple": "Simple Wooden Chair", "tpl_bench_storage": "Storage Bench",
+        "tpl_storage_box": "Storage Box",
+        "tpl_h": "Height H (mm)", "tpl_w": "Width W (mm)", "tpl_d": "Depth D (mm)",
+        "tpl_rot_r": "⬅️ Right", "tpl_rot_l": "Left ➡️",
+        "tpl_apply_btn": "📥 Generate Dimensions & Add to Cut List",
         "btn_calc": "🚀 Calculate & Generate Invoice",
         "inv_title": "🧾 Customer Invoice:", "dl_btn": "⬇️ Download Image",
         "sheets_title": "📐 Cutting Layouts:",
@@ -278,7 +382,11 @@ TR = {
         "tier_max": "🔸 Pro Max Plan — 450 TL / Month",
         "tier_max_d": "All Pro features + Workshop Name + Ledger & Offcuts + Saw Link + WhatsApp",
         "tier_ult": "👑 Ultra Plan — 750 TL / Month",
-        "tier_ult_d": "All Pro Max features + CNC CSV + 75+75 Kartela + PDF + Etiket Labels"
+        "tier_ult_d": "All Pro Max features + CNC CSV + 75+75 Kartela + PDF + Etiket Labels",
+        "js_enter_lw": "Enter length and width",
+        "js_conn_err": "❌ Server connection error",
+        "js_picked": "Selected:",
+        "js_cnc_ready": "Ready for CNC"
     }
 }
 
@@ -797,7 +905,7 @@ HTML_TEMPLATE = """
                 const bg = `hsl(${hue}, ${sat}%, ${lig}%)`;
                 const bType = boardTypes[i % boardTypes.length];
                 const cName = colorNames[i % colorNames.length] + ' #' + (i + 1);
-                cHtml += `<div onclick="showToast('تم اختيار: ${cName} (${bType})')" style="cursor:pointer; background:var(--inp-bg); border:1px solid var(--inp-brd); border-radius:8px; padding:6px; text-align:center; box-shadow:0 2px 5px rgba(0,0,0,0.06);">
+                cHtml += `<div onclick="showToast('{{ t['js_picked'] }} ${cName} (${bType})')" style="cursor:pointer; background:var(--inp-bg); border:1px solid var(--inp-brd); border-radius:8px; padding:6px; text-align:center; box-shadow:0 2px 5px rgba(0,0,0,0.06);">
                     <div style="width:12px; height:12px; border-radius:50%; background:var(--bg-card); border:2px solid #94a3b8; margin:0 auto 5px;"></div>
                     <div style="height:46px; border-radius:6px; background:${bg}; border:1px solid rgba(0,0,0,0.15);"></div>
                     <div style="font-size:10px; font-weight:bold; margin-top:5px; line-height:1.2;">${cName}</div>
@@ -817,7 +925,7 @@ HTML_TEMPLATE = """
                 else if (mode === 4) inner = `<path d="M12,30 Q40,15 68,30 M12,55 Q40,40 68,55 M12,80 Q40,65 68,80" fill="none" stroke="#8d6e63" stroke-width="2"/>`;
                 else inner = `<rect x="14" y="14" width="22" height="36" fill="none" stroke="#8d6e63" stroke-width="1.8"/><rect x="44" y="14" width="22" height="36" fill="none" stroke="#8d6e63" stroke-width="1.8"/><rect x="14" y="58" width="52" height="36" fill="none" stroke="#8d6e63" stroke-width="1.8"/>`;
 
-                cncHtml += `<div onclick="showToast('تصميم كاباك CNC-${i} جاهز للتنفيذ')" style="cursor:pointer; background:var(--inp-bg); border:1px solid var(--inp-brd); border-radius:8px; padding:6px; text-align:center;">
+                cncHtml += `<div onclick="showToast('CNC-${i} — {{ t['js_cnc_ready'] }}')" style="cursor:pointer; background:var(--inp-bg); border:1px solid var(--inp-brd); border-radius:8px; padding:6px; text-align:center;">
                     <svg viewBox="0 0 80 110" style="width:100%; height:75px; background:#faf6f0; border-radius:4px; border:1px solid #d7ccc8;">
                         <rect x="4" y="4" width="72" height="102" fill="none" stroke="#5d4037" stroke-width="2"/>
                         ${inner}
@@ -837,7 +945,7 @@ HTML_TEMPLATE = """
             const btn = document.getElementById('use_offcut_btn');
             if (!box || !c) return;
             box.style.display = 'block';
-            info.innerText = `🪵 ${mat} — القياس: ${w} × ${h} مم`;
+            info.innerText = `🪵 ${mat} — ${w} × ${h} mm`;
             const ctx = c.getContext('2d');
             ctx.clearRect(0, 0, c.width, c.height);
             const sc = Math.min((c.width - 30) / w, (c.height - 30) / h);
@@ -867,7 +975,7 @@ HTML_TEMPLATE = """
         async function submitPayDebt(idx) {
             const inp = document.getElementById('pay_inp_' + idx);
             const amt = inp ? inp.value.trim() : '';
-            if (!amt || isNaN(parseFloat(amt))) { showToast('أدخل مبلغاً صحيحاً'); return; }
+            if (!amt || isNaN(parseFloat(amt))) { showToast('{{ t['js_enter_lw'] }}'); return; }
             try {
                 const res = await fetch(`/pay_debt/${idx}`, {
                     method: 'POST',
@@ -876,7 +984,7 @@ HTML_TEMPLATE = """
                 });
                 const d = await res.json();
                 if (d.ok) location.reload();
-            } catch (e) { showToast('خطأ في الاتصال'); }
+            } catch (e) { showToast('{{ t['js_conn_err'] }}'); }
         }
 
         async function delItem(kind, idx) {
@@ -902,7 +1010,7 @@ HTML_TEMPLATE = """
             const l = document.getElementById('qp_l').value.trim();
             const w = document.getElementById('qp_w').value.trim();
             const q = document.getElementById('qp_q').value.trim() || '1';
-            if (!l || !w) { showToast('أدخل الطول والعرض'); return; }
+            if (!l || !w) { showToast('{{ t['js_enter_lw'] }}'); return; }
             const lc = (document.getElementById('ed_l1').checked ? 1 : 0) + (document.getElementById('ed_l2').checked ? 1 : 0);
             const wc = (document.getElementById('ed_w1').checked ? 1 : 0) + (document.getElementById('ed_w2').checked ? 1 : 0);
             let ed = '0';
@@ -968,7 +1076,7 @@ HTML_TEMPLATE = """
                 }
             } catch (e) {
                 status.style.color = '#dc2626';
-                status.innerText = "❌ خطأ في الاتصال بالسيرفر";
+                status.innerText = "{{ t['js_conn_err'] }}";
             }
         }
     </script>
@@ -1001,18 +1109,18 @@ HTML_TEMPLATE = """
     <div class="paywall">
         <h3>{{ t['pay_title'] }}</h3>
         <p>{{ t['pay_desc'] }}</p>
-        <div style="display:flex; flex-direction:column; gap:8px; margin:12px 0; text-align:right;">
+        <div style="display:flex; flex-direction:column; gap:8px; margin:12px 0; text-align:{{ 'right' if lang=='ar' else 'left' }};">
             <div style="background:#fff; padding:10px; border-radius:8px; border:1px solid #cbd5e1;">
-                <b>🔹 باقة Pro — 250 TL / شهرياً</b><br>
-                <span style="font-size:12px; color:#475569;">تقطيع الألواح + الفاتورة + قراءة الصور AI + القوالب الجاهزة</span>
+                <b>{{ t['tier_pro'] }}</b><br>
+                <span style="font-size:12px; color:#475569;">{{ t['tier_pro_d'] }}</span>
             </div>
             <div style="background:#fff; padding:10px; border-radius:8px; border:2px solid #2563eb;">
-                <b>🔸 باقة Pro Max — 450 TL / شهرياً</b><br>
-                <span style="font-size:12px; color:#475569;">كل ميزات Pro + اسم الورشة + دفتر الورشة والمخزون + رابط عامل المنشار + واتساب</span>
+                <b>{{ t['tier_max'] }}</b><br>
+                <span style="font-size:12px; color:#475569;">{{ t['tier_max_d'] }}</span>
             </div>
             <div style="background:#fff; padding:10px; border-radius:8px; border:2px solid #b45309;">
-                <b>👑 باقة Ultra — 750 TL / شهرياً</b><br>
-                <span style="font-size:12px; color:#475569;">كل ميزات Pro Max + تصدير CNC CSV + قارتيلا 75+75 + PDF + ملصقات Etiket</span>
+                <b>{{ t['tier_ult'] }}</b><br>
+                <span style="font-size:12px; color:#475569;">{{ t['tier_ult_d'] }}</span>
             </div>
         </div>
         <div class="iban">{{ iban }}</div>
@@ -1027,7 +1135,7 @@ HTML_TEMPLATE = """
         <button type="button" class="tab-btn" onclick="openTab('tab2', this)">{{ t['tab_set'] }}</button>
         <button type="button" class="tab-btn" onclick="openTab('tab3', this)">{{ t['tab_acc'] }}</button>
         <button type="button" class="tab-btn" onclick="openTab('tab4', this)">{{ t['tab_tpl'] }}</button>
-        {% if is_admin_web %}<button type="button" class="tab-btn" onclick="openTab('tab5', this)">👑 الإدارة</button>{% endif %}
+        {% if is_admin_web %}<button type="button" class="tab-btn" onclick="openTab('tab5', this)">{{ t['tab_admin'] }}</button>{% endif %}
         <button type="button" class="tab-btn" onclick="openTab('tab6', this)">{{ t['tab_kar'] }}</button>
     </div>
 
@@ -1056,29 +1164,29 @@ HTML_TEMPLATE = """
             </div>
             
             <div style="background:var(--inp-bg); border:1px solid var(--inp-brd); border-radius:10px; padding:10px; margin:10px 0;">
-                <div style="font-weight:bold; font-size:12px; margin-bottom:6px; color:var(--text-lbl);">⚡ إضافة سريعة (الطول × العرض × العدد + أطراف اللزق):</div>
+                <div style="font-weight:bold; font-size:12px; margin-bottom:6px; color:var(--text-lbl);">{{ t['qa_title'] }}</div>
                 <div class="row" style="gap:6px;">
-                    <div><input type="number" id="qp_l" placeholder="الطول" dir="ltr"></div>
-                    <div><input type="number" id="qp_w" placeholder="العرض" dir="ltr"></div>
-                    <div><input type="number" id="qp_q" placeholder="العدد" value="1" dir="ltr"></div>
+                    <div><input type="number" id="qp_l" placeholder="{{ t['qa_l'] }}" dir="ltr"></div>
+                    <div><input type="number" id="qp_w" placeholder="{{ t['qa_w'] }}" dir="ltr"></div>
+                    <div><input type="number" id="qp_q" placeholder="{{ t['qa_q'] }}" value="1" dir="ltr"></div>
                 </div>
                 <div style="margin-top:8px;">
-                    <button type="button" onclick="toggleEdgeOpts()" style="width:100%; padding:8px; background:#e2e8f0; color:#1e293b; border:1px solid #94a3b8; border-radius:6px; font-weight:bold; cursor:pointer; font-size:12px;">🎀 تحديد أطراف اللزق (طويل / قصير) ▾</button>
+                    <button type="button" onclick="toggleEdgeOpts()" style="width:100%; padding:8px; background:#e2e8f0; color:#1e293b; border:1px solid #94a3b8; border-radius:6px; font-weight:bold; cursor:pointer; font-size:12px;">{{ t['qa_edge_btn'] }}</button>
                     <div id="edge_opts_box" style="display:none; margin-top:6px; padding:8px; background:var(--bg-card); border:1px solid var(--inp-brd); border-radius:8px; font-size:12px;">
                         <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:6px;">
-                            <button type="button" onclick="setQuickEdge('L2W2')" style="flex:1; padding:6px; border:1px solid #2563eb; background:#eff6ff; color:#1e3a8a; border-radius:6px; cursor:pointer; font-weight:bold;">4 أطراف (2 طويل + 2 قصير)</button>
-                            <button type="button" onclick="setQuickEdge('L1')" style="flex:1; padding:6px; border:1px solid #2563eb; background:#eff6ff; color:#1e3a8a; border-radius:6px; cursor:pointer; font-weight:bold;">1 طويل</button>
-                            <button type="button" onclick="setQuickEdge('W1')" style="flex:1; padding:6px; border:1px solid #2563eb; background:#eff6ff; color:#1e3a8a; border-radius:6px; cursor:pointer; font-weight:bold;">1 قصير</button>
+                            <button type="button" onclick="setQuickEdge('L2W2')" style="flex:1; padding:6px; border:1px solid #2563eb; background:#eff6ff; color:#1e3a8a; border-radius:6px; cursor:pointer; font-weight:bold;">{{ t['qa_e_all'] }}</button>
+                            <button type="button" onclick="setQuickEdge('L1')" style="flex:1; padding:6px; border:1px solid #2563eb; background:#eff6ff; color:#1e3a8a; border-radius:6px; cursor:pointer; font-weight:bold;">{{ t['qa_e_l1'] }}</button>
+                            <button type="button" onclick="setQuickEdge('W1')" style="flex:1; padding:6px; border:1px solid #2563eb; background:#eff6ff; color:#1e3a8a; border-radius:6px; cursor:pointer; font-weight:bold;">{{ t['qa_e_w1'] }}</button>
                         </div>
                         <div style="display:flex; gap:10px; justify-content:space-around;">
-                            <label style="display:flex; align-items:center; gap:4px; margin:0; font-weight:normal;"><input type="checkbox" id="ed_l1" style="width:auto;"> طويل 1</label>
-                            <label style="display:flex; align-items:center; gap:4px; margin:0; font-weight:normal;"><input type="checkbox" id="ed_l2" style="width:auto;"> طويل 2</label>
-                            <label style="display:flex; align-items:center; gap:4px; margin:0; font-weight:normal;"><input type="checkbox" id="ed_w1" style="width:auto;"> قصير 1</label>
-                            <label style="display:flex; align-items:center; gap:4px; margin:0; font-weight:normal;"><input type="checkbox" id="ed_w2" style="width:auto;"> قصير 2</label>
+                            <label style="display:flex; align-items:center; gap:4px; margin:0; font-weight:normal;"><input type="checkbox" id="ed_l1" style="width:auto;"> {{ t['qa_cb_l1'] }}</label>
+                            <label style="display:flex; align-items:center; gap:4px; margin:0; font-weight:normal;"><input type="checkbox" id="ed_l2" style="width:auto;"> {{ t['qa_cb_l2'] }}</label>
+                            <label style="display:flex; align-items:center; gap:4px; margin:0; font-weight:normal;"><input type="checkbox" id="ed_w1" style="width:auto;"> {{ t['qa_cb_w1'] }}</label>
+                            <label style="display:flex; align-items:center; gap:4px; margin:0; font-weight:normal;"><input type="checkbox" id="ed_w2" style="width:auto;"> {{ t['qa_cb_w2'] }}</label>
                         </div>
                     </div>
                 </div>
-                <button type="button" onclick="addQuickPiece()" style="width:100%; margin-top:8px; padding:9px; background:#2563eb; color:#fff; border:none; border-radius:8px; font-weight:bold; cursor:pointer; font-size:13px;">➕ إضافة القطعة للقائمة</button>
+                <button type="button" onclick="addQuickPiece()" style="width:100%; margin-top:8px; padding:9px; background:#2563eb; color:#fff; border:none; border-radius:8px; font-weight:bold; cursor:pointer; font-size:13px;">{{ t['qa_add_btn'] }}</button>
             </div>
 
             <label>{{ t['pieces_lbl'] }}</label>
@@ -1115,19 +1223,19 @@ HTML_TEMPLATE = """
             </div>
             <div class="row">
                 <div><label>{{ t['p_sheet'] }}</label><input type="text" inputmode="numeric" dir="ltr" lang="en" name="p_sheet" value="650"></div>
-                <div><label>شريط PVC 0.4mm (TL)</label><input type="text" inputmode="numeric" dir="ltr" lang="en" name="p_pvc" value="12"></div>
-                <div><label>شريط PVC 2mm (TL)</label><input type="text" inputmode="numeric" dir="ltr" lang="en" name="p_pvc2" value="25"></div>
+                <div><label>{{ t['p_pvc'] }}</label><input type="text" inputmode="numeric" dir="ltr" lang="en" name="p_pvc" value="12"></div>
+                <div><label>{{ t['p_pvc2'] }}</label><input type="text" inputmode="numeric" dir="ltr" lang="en" name="p_pvc2" value="25"></div>
             </div>
             <label>{{ t['p_cut'] }}</label><input type="text" inputmode="numeric" dir="ltr" lang="en" name="p_cut" value="100">
             <hr style="margin:14px 0; border:0; border-top:1px solid var(--inp-brd);">
             <div class="row">
-                <div><label>🏷️ اسم الورشة (للفاتورة):</label><input type="text" name="ws_name" value="{{ ws_name }}"></div>
-                <div><label>📞 هاتف الورشة:</label><input type="text" dir="ltr" name="ws_phone" value="{{ ws_phone }}"></div>
+                <div><label>{{ t['ws_name_lbl'] }}</label><input type="text" name="ws_name" value="{{ ws_name }}"></div>
+                <div><label>{{ t['ws_phone_lbl'] }}</label><input type="text" dir="ltr" name="ws_phone" value="{{ ws_phone }}"></div>
             </div>
-            <label>📄 نوع الفاتورة:</label>
+            <label>{{ t['inv_mode_lbl'] }}</label>
             <select name="inv_mode">
-                <option value="workshop" {{ 'selected' if inv_mode=='workshop' else '' }}>🔧 نسخة الورشة (تظهر الهدر والتفاصيل)</option>
-                <option value="customer" {{ 'selected' if inv_mode=='customer' else '' }}>🤝 عرض سعر للزبون (يخفي الهدر)</option>
+                <option value="workshop" {{ 'selected' if inv_mode=='workshop' else '' }}>{{ t['inv_mode_ws'] }}</option>
+                <option value="customer" {{ 'selected' if inv_mode=='customer' else '' }}>{{ t['inv_mode_cust'] }}</option>
             </select>
         </div>
 
@@ -1148,54 +1256,54 @@ HTML_TEMPLATE = """
 
         
         <div id="tab4" class="tab-content">
-            <label>🧊 اختر قالباً جاهزاً (22+ نموذج):</label>
+            <label>{{ t['tpl_choose'] }}</label>
             <select id="tpl_select" onchange="onTplChange()">
-                <optgroup label="🚪 خزائن وملابس">
-                    <option value="wardrobe2">خزانة ملابس ببابين</option>
-                    <option value="wardrobe3">خزانة ملابس 3 أبواب</option>
-                    <option value="wardrobe_slide">خزانة سحاب (جرار)</option>
-                    <option value="shoe_cab">خزانة أحذية</option>
-                    <option value="bookcase">مكتبة / رفوف مفتوحة (4 رفوف)</option>
+                <optgroup label="{{ t['tpl_grp_ward'] }}">
+                    <option value="wardrobe2">{{ t['tpl_wardrobe2'] }}</option>
+                    <option value="wardrobe3">{{ t['tpl_wardrobe3'] }}</option>
+                    <option value="wardrobe_slide">{{ t['tpl_wardrobe_slide'] }}</option>
+                    <option value="shoe_cab">{{ t['tpl_shoe_cab'] }}</option>
+                    <option value="bookcase">{{ t['tpl_bookcase'] }}</option>
                 </optgroup>
-                <optgroup label="🍳 مطابخ">
-                    <option value="kit_base">خزانة مطبخ سفلية (بابين)</option>
-                    <option value="kit_wall">خزانة مطبخ علوية (بابين)</option>
-                    <option value="kit_drawers">وحدة أدراج مطبخ (3 دروج)</option>
-                    <option value="kit_tall">خزانة مطبخ عالية (ثلاجة/فرن)</option>
+                <optgroup label="{{ t['tpl_grp_kit'] }}">
+                    <option value="kit_base">{{ t['tpl_kit_base'] }}</option>
+                    <option value="kit_wall">{{ t['tpl_kit_wall'] }}</option>
+                    <option value="kit_drawers">{{ t['tpl_kit_drawers'] }}</option>
+                    <option value="kit_tall">{{ t['tpl_kit_tall'] }}</option>
                 </optgroup>
-                <optgroup label="🛏️ غرف نوم وأدراج">
-                    <option value="nightstand">كومودينو (طاولة سرير 2 درج)</option>
-                    <option value="chiffonier">شفونير (4 دروج)</option>
-                    <option value="dresser">تسريحة مع أدراج</option>
-                    <option value="bed_single">هيكل سرير مفرد</option>
-                    <option value="bed_double">هيكل سرير مزدوج</option>
+                <optgroup label="{{ t['tpl_grp_bed'] }}">
+                    <option value="nightstand">{{ t['tpl_nightstand'] }}</option>
+                    <option value="chiffonier">{{ t['tpl_chiffonier'] }}</option>
+                    <option value="dresser">{{ t['tpl_dresser'] }}</option>
+                    <option value="bed_single">{{ t['tpl_bed_single'] }}</option>
+                    <option value="bed_double">{{ t['tpl_bed_double'] }}</option>
                 </optgroup>
-                <optgroup label="🪑 طاولات ومكاتب وكراسي">
-                    <option value="table_dining">طاولة طعام مستطيلة</option>
-                    <option value="table_coffee">طاولة قهوة / وسط</option>
-                    <option value="desk_office">مكتب دراسة / عمل</option>
-                    <option value="tv_unit">طاولة تلفزيون (TV Ünitesi)</option>
-                    <option value="chair_simple">كرسي خشبي بسيط</option>
-                    <option value="bench_storage">بنش / مقعد مع تخزين</option>
-                    <option value="storage_box">صندوق تخزين (مطمورة)</option>
+                <optgroup label="{{ t['tpl_grp_tbl'] }}">
+                    <option value="table_dining">{{ t['tpl_table_dining'] }}</option>
+                    <option value="table_coffee">{{ t['tpl_table_coffee'] }}</option>
+                    <option value="desk_office">{{ t['tpl_desk_office'] }}</option>
+                    <option value="tv_unit">{{ t['tpl_tv_unit'] }}</option>
+                    <option value="chair_simple">{{ t['tpl_chair_simple'] }}</option>
+                    <option value="bench_storage">{{ t['tpl_bench_storage'] }}</option>
+                    <option value="storage_box">{{ t['tpl_storage_box'] }}</option>
                 </optgroup>
             </select>
             <div class="row">
-                <div><label>الارتفاع H (مم)</label><input type="number" id="tpl_h" value="2000" oninput="draw3D()"></div>
-                <div><label>العرض W (مم)</label><input type="number" id="tpl_w" value="1000" oninput="draw3D()"></div>
-                <div><label>العمق D (مم)</label><input type="number" id="tpl_d" value="600" oninput="draw3D()"></div>
+                <div><label>{{ t['tpl_h'] }}</label><input type="number" id="tpl_h" value="2000" oninput="draw3D()"></div>
+                <div><label>{{ t['tpl_w'] }}</label><input type="number" id="tpl_w" value="1000" oninput="draw3D()"></div>
+                <div><label>{{ t['tpl_d'] }}</label><input type="number" id="tpl_d" value="600" oninput="draw3D()"></div>
             </div>
             <div style="text-align:center; margin:10px 0;">
-                <img id="tpl_preview_img" src="https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=500&q=80" style="max-height:170px; width:auto; max-width:100%; object-fit:cover; border-radius:10px; border:1px solid var(--inp-brd);" alt="شكل القطعة جاهزة">
+                <img id="tpl_preview_img" src="https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=500&q=80" style="max-height:170px; width:auto; max-width:100%; object-fit:cover; border-radius:10px; border:1px solid var(--inp-brd);" alt="3D">
             </div>
             <div style="text-align:center; margin:12px 0; background:var(--inp-bg); border:1px solid var(--inp-brd); border-radius:10px; padding:10px;">
                 <canvas id="canvas3d" width="320" height="220" style="max-width:100%;"></canvas>
                 <div style="display:flex; justify-content:center; gap:10px; margin-top:8px;">
-                    <button type="button" onclick="rot3D(-15)" style="padding:6px 14px; border:none; border-radius:6px; background:#2563eb; color:#fff; cursor:pointer; font-weight:bold;">⬅️ يمين</button>
-                    <button type="button" onclick="rot3D(15)" style="padding:6px 14px; border:none; border-radius:6px; background:#2563eb; color:#fff; cursor:pointer; font-weight:bold;">يسار ➡️</button>
+                    <button type="button" onclick="rot3D(-15)" style="padding:6px 14px; border:none; border-radius:6px; background:#2563eb; color:#fff; cursor:pointer; font-weight:bold;">{{ t['tpl_rot_r'] }}</button>
+                    <button type="button" onclick="rot3D(15)" style="padding:6px 14px; border:none; border-radius:6px; background:#2563eb; color:#fff; cursor:pointer; font-weight:bold;">{{ t['tpl_rot_l'] }}</button>
                 </div>
             </div>
-            <button type="button" onclick="applyTemplate()" style="width:100%; padding:12px; background:#f59e0b; color:#fff; border:none; border-radius:8px; font-weight:bold; font-size:15px; cursor:pointer;">📥 توليد المقاسات وإضافتها للتقطيع</button>
+            <button type="button" onclick="applyTemplate()" style="width:100%; padding:12px; background:#f59e0b; color:#fff; border:none; border-radius:8px; font-weight:bold; font-size:15px; cursor:pointer;">{{ t['tpl_apply_btn'] }}</button>
         </div>
 
         
@@ -1251,12 +1359,12 @@ HTML_TEMPLATE = """
         <h3>{{ t['inv_title'] }}</h3>
         <img src="data:image/png;base64,{{ invoice }}">
         <a href="/download/{{ invoice_id }}" class="dl-btn">{{ t['dl_btn'] }}</a>
-        <a href="https://wa.me/?text={{ wa_text }}" target="_blank" class="dl-btn" style="background:#25D366;">📲 إرسال عبر واتساب</a>
-        <button type="button" onclick="window.print()" class="dl-btn" style="background:#64748b; border:none; cursor:pointer;">🏷️ طباعة ملصقات القص (Etiket)</button>
-        <a href="/saw/{{ order_id }}" target="_blank" class="dl-btn" style="background:#f59e0b;">🪚 رابط عامل المنشار (بدون أسعار)</a>
-        <a href="/export_csv/{{ order_id }}" class="dl-btn" style="background:#0f766e;">📊 تصدير CSV لماكينة القص (CNC)</a>
-        <a href="/invoice_pdf/{{ order_id }}" class="dl-btn" style="background:#dc2626;">📄 تحميل الفاتورة PDF</a>
-        <a href="/etiket/{{ order_id }}" target="_blank" class="dl-btn" style="background:#7c3aed;">🏷️ صفحة ملصقات (Etiket)</a>
+        <a href="https://wa.me/?text={{ wa_text }}" target="_blank" class="dl-btn" style="background:#25D366;">{{ t['wa_btn'] }}</a>
+        <button type="button" onclick="window.print()" class="dl-btn" style="background:#64748b; border:none; cursor:pointer;">{{ t['print_btn'] }}</button>
+        <a href="/saw/{{ order_id }}" target="_blank" class="dl-btn" style="background:#f59e0b;">{{ t['saw_btn'] }}</a>
+        <a href="/export_csv/{{ order_id }}" class="dl-btn" style="background:#0f766e;">{{ t['csv_btn'] }}</a>
+        <a href="/invoice_pdf/{{ order_id }}" class="dl-btn" style="background:#dc2626;">{{ t['pdf_btn'] }}</a>
+        <a href="/etiket/{{ order_id }}" target="_blank" class="dl-btn" style="background:#7c3aed;">{{ t['etiket_btn'] }}</a>
 
         <h3>{{ t['sheets_title'] }} ({{ sheets_cnt }})</h3>
         {% for s in sheets %}
