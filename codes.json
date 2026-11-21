@@ -206,6 +206,13 @@
       "loc": "United States - Secaucus",
       "time": "2026-11-21 15:14",
       "ref": "مباشر"
+    },
+    {
+      "ip": "38.145.199.236",
+      "device": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome",
+      "loc": "United States - Secaucus",
+      "time": "2026-11-21 15:18",
+      "ref": "مباشر"
     }
   ]
 }
