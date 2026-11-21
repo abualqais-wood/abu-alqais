@@ -178,6 +178,13 @@
       "loc": "Turkey - Solaklı",
       "time": "2026-11-21 08:11",
       "ref": "مباشر"
+    },
+    {
+      "ip": "5.229.84.188",
+      "device": "Dalvik/2.1.0 (Linux; U; Android 13; 22101316G Build/TP1A.220624.014)",
+      "loc": "Türkiye - Seyhan",
+      "time": "2026-11-21 13:14",
+      "ref": "مباشر"
     }
   ]
 }
