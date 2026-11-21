@@ -162,6 +162,13 @@
       "loc": "Turkey - Kurttepe",
       "time": "2026-11-17 19:38",
       "ref": "مباشر"
+    },
+    {
+      "ip": "5.229.56.5",
+      "device": "Dalvik/2.1.0 (Linux; U; Android 13; 22101316G Build/TP1A.220624.014)",
+      "loc": "Türkiye - Istanbul",
+      "time": "2026-11-21 06:22",
+      "ref": "مباشر"
     }
   ]
 }
