@@ -199,6 +199,13 @@
       "loc": "United States - Secaucus",
       "time": "2026-11-21 15:11",
       "ref": "مباشر"
+    },
+    {
+      "ip": "38.145.199.234",
+      "device": "Dalvik/2.1.0 (Linux; U; Android 13; 22101316G Build/TP1A.220624.014)",
+      "loc": "United States - Secaucus",
+      "time": "2026-11-21 15:14",
+      "ref": "مباشر"
     }
   ]
 }
