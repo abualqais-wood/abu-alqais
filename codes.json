@@ -185,6 +185,13 @@
       "loc": "Türkiye - Seyhan",
       "time": "2026-11-21 13:14",
       "ref": "مباشر"
+    },
+    {
+      "ip": "38.127.56.10",
+      "device": "Dalvik/2.1.0 (Linux; U; Android 13; 22101316G Build/TP1A.220624.014)",
+      "loc": "United States - Secaucus",
+      "time": "2026-11-21 15:11",
+      "ref": "مباشر"
     }
   ]
 }
