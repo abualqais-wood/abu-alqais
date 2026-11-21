@@ -224,7 +224,26 @@ TR = {
         "js_enter_lw": "أدخل الطول والعرض",
         "js_conn_err": "❌ خطأ في الاتصال بالسيرفر",
         "js_picked": "تم اختيار:",
-        "js_cnc_ready": "جاهز للتنفيذ"
+        "js_cnc_ready": "جاهز للتنفيذ",
+        "adm_title": "👑 لوحة الإدارة: المستخدمون الجدد والتسويق",
+        "adm_ban_ph": "أدخل كود التفعيل لحظره (QAIS-...)",
+        "adm_ban_btn": "🚫 حظر الكود",
+        "adm_ban_ok": "🚫 تم حظر الكود {code} بنجاح",
+        "adm_enter_code": "أدخل الكود",
+        "adm_unknown": "غير معروف",
+        "adm_direct": "مباشر",
+        "wa_tpl": "🪵 {ws}\nالمادة: {mat}\nالألواح: {sheets}\nالسعر الإجمالي: {price} {curr}\nللتواصل: {phone}",
+        "err_no_pieces": "أدخل مقاساً واحداً على الأقل",
+        "err_too_big": "القطعة أكبر من اللوح",
+        "err_all_fit": "تأكد أن جميع المقاسات أصغر من مقاس اللوح",
+        "err_code_bad": "كود التفعيل غير صحيح!",
+        "err_code_banned": "⛔ هذا الكود محظور من الإدارة!",
+        "err_code_used": "هذا الكود تم استخدامه مسبقاً!",
+        "err_no_image": "لم يتم اختيار صورة",
+        "err_no_key": "مفتاح OPENROUTER_API_KEY غير موجود في إعدادات السيرفر",
+        "err_no_requests": "مكتبة requests غير مثبتة",
+        "err_img_read": "تعذر قراءة ملف الصورة",
+        "err_ocr_fail": "تعذر القراءة من OpenRouter"
     },
     "tr": {
         "dir": "ltr", "title": "Abu Al-Qais - Kesim Optimizasyon",
@@ -305,7 +324,26 @@ TR = {
         "js_enter_lw": "Boy ve en giriniz",
         "js_conn_err": "❌ Sunucu bağlantı hatası",
         "js_picked": "Seçildi:",
-        "js_cnc_ready": "Üretime hazır"
+        "js_cnc_ready": "Üretime hazır",
+        "adm_title": "👑 Yönetim Paneli: Yeni Kullanıcılar ve Pazarlama",
+        "adm_ban_ph": "Yasaklanacak aktivasyon kodunu girin (QAIS-...)",
+        "adm_ban_btn": "🚫 Kodu Yasakla",
+        "adm_ban_ok": "🚫 {code} kodu başarıyla yasaklandı",
+        "adm_enter_code": "Kodu girin",
+        "adm_unknown": "Bilinmiyor",
+        "adm_direct": "Doğrudan",
+        "wa_tpl": "🪵 {ws}\nMalzeme: {mat}\nPlaka sayısı: {sheets}\nToplam fiyat: {price} {curr}\nİletişim: {phone}",
+        "err_no_pieces": "En az bir ölçü girin",
+        "err_too_big": "Parça plakadan büyük",
+        "err_all_fit": "Tüm ölçülerin plaka ölçüsünden küçük olduğundan emin olun",
+        "err_code_bad": "Aktivasyon kodu hatalı!",
+        "err_code_banned": "⛔ Bu kod yönetim tarafından yasaklandı!",
+        "err_code_used": "Bu kod daha önce kullanıldı!",
+        "err_no_image": "Fotoğraf seçilmedi",
+        "err_no_key": "OPENROUTER_API_KEY anahtarı sunucu ayarlarında bulunamadı",
+        "err_no_requests": "requests kütüphanesi yüklü değil",
+        "err_img_read": "Görsel dosyası okunamadı",
+        "err_ocr_fail": "OpenRouter'dan okunamadı"
     },
     "en": {
         "dir": "ltr", "title": "Abu Al-Qais - Woodwork Pro",
@@ -386,9 +424,60 @@ TR = {
         "js_enter_lw": "Enter length and width",
         "js_conn_err": "❌ Server connection error",
         "js_picked": "Selected:",
-        "js_cnc_ready": "Ready for CNC"
+        "js_cnc_ready": "Ready for CNC",
+        "adm_title": "👑 Admin Panel: New Users & Marketing",
+        "adm_ban_ph": "Enter the activation code to ban (QAIS-...)",
+        "adm_ban_btn": "🚫 Ban Code",
+        "adm_ban_ok": "🚫 Code {code} banned successfully",
+        "adm_enter_code": "Enter the code",
+        "adm_unknown": "Unknown",
+        "adm_direct": "Direct",
+        "wa_tpl": "🪵 {ws}\nMaterial: {mat}\nSheets: {sheets}\nTotal price: {price} {curr}\nContact: {phone}",
+        "err_no_pieces": "Enter at least one dimension",
+        "err_too_big": "The piece is larger than the sheet",
+        "err_all_fit": "Make sure all dimensions are smaller than the sheet size",
+        "err_code_bad": "Invalid activation code!",
+        "err_code_banned": "⛔ This code has been banned by the admin!",
+        "err_code_used": "This code has already been used!",
+        "err_no_image": "No image selected",
+        "err_no_key": "OPENROUTER_API_KEY is missing from the server settings",
+        "err_no_requests": "The requests library is not installed",
+        "err_img_read": "Could not read the image file",
+        "err_ocr_fail": "Could not read from OpenRouter"
     }
 }
+
+# ترجمة رسائل الخادم الظاهرة في واجهة الويب (النص العربي الأصلي → مفتاح الترجمة)
+ERR_MAP = {
+    "أدخل مقاساً واحداً على الأقل": "err_no_pieces",
+    "القطعة أكبر من اللوح": "err_too_big",
+    "تأكد أن جميع المقاسات أصغر من مقاس اللوح": "err_all_fit",
+    "كود التفعيل غير صحيح!": "err_code_bad",
+    "⛔ هذا الكود محظور من الإدارة!": "err_code_banned",
+    "هذا الكود تم استخدامه مسبقاً!": "err_code_used",
+    "لم يتم اختيار صورة": "err_no_image",
+    "مفتاح OPENROUTER_API_KEY غير موجود في إعدادات السيرفر": "err_no_key",
+    "مكتبة requests غير مثبتة": "err_no_requests",
+}
+ERR_PREFIX = (
+    ("تعذر قراءة ملف الصورة", "err_img_read"),
+    ("تعذر القراءة من OpenRouter", "err_ocr_fail"),
+)
+
+def web_lang():
+    lg = request.args.get("lang") or request.cookies.get("lang") or "ar"
+    return lg if lg in TR else "ar"
+
+def tr_err(msg, lang):
+    """يترجم رسائل الخطأ العربية القادمة من الخادم إلى لغة الواجهة (ويُبقي التفاصيل التقنية كما هي)."""
+    tt = TR.get(lang, TR["ar"])
+    msg = str(msg)
+    if msg in ERR_MAP:
+        return tt[ERR_MAP[msg]]
+    for pre, key in ERR_PREFIX:
+        if msg.startswith(pre):
+            return tt[key] + msg[len(pre):]
+    return msg
 
 # ============================ خوارزمية التعشيش ============================
 SORT_KEYS = [
@@ -1312,15 +1401,15 @@ HTML_TEMPLATE = """
 
             {% if is_admin_web %}
             <hr style="margin:14px 0; border:0; border-top:2px solid #2563eb;">
-            <h4 style="margin:6px 0; color:#1e3a8a;">👑 لوحة الإدارة: المستخدمون الجدد والتسويق</h4>
+            <h4 style="margin:6px 0; color:#1e3a8a;">{{ t['adm_title'] }}</h4>
             <div style="display:flex; gap:6px; margin-bottom:10px;">
-                <input type="text" id="ban_code_inp" placeholder="أدخل كود التفعيل لحضره (QAIS-...)" dir="ltr" style="flex:1;">
-                <button type="button" onclick="banCodeWeb()" style="background:#dc2626; color:#fff; border:none; border-radius:8px; padding:0 14px; font-weight:bold; cursor:pointer;">🚫 حظر الكود</button>
+                <input type="text" id="ban_code_inp" placeholder="{{ t['adm_ban_ph'] }}" dir="ltr" style="flex:1;">
+                <button type="button" onclick="banCodeWeb()" style="background:#dc2626; color:#fff; border:none; border-radius:8px; padding:0 14px; font-weight:bold; cursor:pointer;">{{ t['adm_ban_btn'] }}</button>
             </div>
             <div style="max-height:200px; overflow-y:auto; border:1px solid var(--inp-brd); border-radius:8px; padding:8px; background:var(--inp-bg); font-size:12px;">
                 {% for u in web_users %}
                 <div style="padding:6px 0; border-bottom:1px dashed var(--inp-brd);">
-                    <div><b>📍 {{ u.loc }}</b> | 🕒 {{ u.time }} | 📣 {{ u.ref }}</div>
+                    <div><b>📍 {{ t['adm_unknown'] if u.loc == 'غير معروف' else u.loc }}</b> | 🕒 {{ u.time }} | 📣 {{ t['adm_direct'] if u.ref == 'مباشر' else u.ref }}</div>
                     <div style="color:#64748b; font-size:11px;">📱 {{ u.device }} | 🌐 {{ u.ip }}</div>
                 </div>
                 {% endfor %}
@@ -1516,10 +1605,11 @@ def delete_ledger(idx):
 
 @app.route("/ban_code_web", methods=["POST"])
 def ban_code_web():
+    lang = web_lang()
     data = request.get_json(silent=True) or {}
     target_c = (data.get("code") or "").strip().upper()
     if not target_c:
-        return jsonify({"ok": False, "msg": "أدخل الكود"})
+        return jsonify({"ok": False, "msg": TR[lang]["adm_enter_code"]})
     st = load_store(force=True)
     if target_c not in st.setdefault("banned_codes", []):
         st["banned_codes"].append(target_c)
@@ -1529,7 +1619,7 @@ def ban_code_web():
         if uid and uid in st.get("tg_users", {}):
             st["tg_users"][uid]["pro_until"] = 0
     save_store(st)
-    return jsonify({"ok": True, "msg": f"🚫 تم حظر الكود {target_c} بنجاح"})
+    return jsonify({"ok": True, "msg": TR[lang]["adm_ban_ok"].format(code=target_c)})
 
 @app.route("/health", methods=["GET"])
 def health():
@@ -1548,14 +1638,15 @@ def download_img(img_id):
 
 @app.route("/ocr", methods=["POST"])
 def ocr_endpoint():
+    lang = web_lang()
     try:
         img_file = request.files.get("order_img")
         if not img_file or not img_file.filename:
-            return jsonify({"ok": False, "error": "لم يتم اختيار صورة"})
+            return jsonify({"ok": False, "error": tr_err("لم يتم اختيار صورة", lang)})
         text = ocr_image_ai(img_file.read())
         return jsonify({"ok": True, "text": text})
     except Exception as e:
-        return jsonify({"ok": False, "error": str(e)})
+        return jsonify({"ok": False, "error": tr_err(str(e), lang)})
 
 @app.route("/", methods=["GET", "POST"])
 def home():
@@ -1626,7 +1717,7 @@ def home():
                 if code.strip().upper() == ADMIN_UNLOCK_CODE:
                     resp.set_cookie("is_admin_web", "1", max_age=30*86400)
                 return resp
-            ctx["paywall"], ctx["error"] = True, msg_txt
+            ctx["paywall"], ctx["error"] = True, tr_err(msg_txt, lang)
             return render_template_string(HTML_TEMPLATE, **ctx)
 
         if trial_used and not is_pro:
@@ -1691,7 +1782,7 @@ def home():
             inv_mode = request.form.get("inv_mode", "workshop")
             ctx.update({"ws_name": ws_name, "ws_phone": ws_phone, "inv_mode": inv_mode})
             from urllib.parse import quote
-            wa_msg = f"🪵 {ws_name}\nالمادة: {mat}\nالألواح: {total_sheets}\nالسعر الإجمالي: {final_price:.1f} {curr}\nللتواصل: {ws_phone}"
+            wa_msg = TR[lang]["wa_tpl"].format(ws=ws_name, mat=mat, sheets=total_sheets, price=f"{final_price:.1f}", curr=curr, phone=ws_phone)
             ctx["wa_text"] = quote(wa_msg)
             cust_name = request.form.get("cust_name", "").strip()
             deposit = 0.0
@@ -1734,7 +1825,7 @@ def home():
             resp.set_cookie("lang", lang, max_age=365*86400)
             return resp
         except Exception as e:
-            ctx["error"] = str(e)
+            ctx["error"] = tr_err(str(e), lang)
 
     elif trial_used and not is_pro:
         ctx["paywall"] = True
