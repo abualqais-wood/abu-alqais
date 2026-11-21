@@ -241,6 +241,13 @@
       "loc": "United States - Secaucus",
       "time": "2026-11-21 15:58",
       "ref": "مباشر"
+    },
+    {
+      "ip": "34.19.73.234",
+      "device": "Go-http-client/2.0",
+      "loc": "United States - The Dalles",
+      "time": "2026-11-21 16:23",
+      "ref": "مباشر"
     }
   ]
 }
