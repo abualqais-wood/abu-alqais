@@ -27,6 +27,13 @@
       "created_at": 1795441118,
       "used_at": 1795441132,
       "used_by": "web"
+    },
+    "QAIS-PRO-4734-LS": {
+      "used": false,
+      "tier": "pro",
+      "created_at": 1795471198,
+      "used_at": null,
+      "used_by": null
     }
   },
   "tg_users": {
