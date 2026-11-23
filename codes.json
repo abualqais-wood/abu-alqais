@@ -29,11 +29,11 @@
       "used_by": "web"
     },
     "QAIS-PRO-4734-LS": {
-      "used": false,
+      "used": true,
       "tier": "pro",
       "created_at": 1795471198,
-      "used_at": null,
-      "used_by": null
+      "used_at": 1795471285,
+      "used_by": "243552993"
     }
   },
   "tg_users": {
@@ -56,6 +56,11 @@
     "7779230611": {
       "trial_used": false,
       "pro_until": 0
+    },
+    "243552993": {
+      "trial_used": true,
+      "pro_until": 1798063285,
+      "tier": "pro"
     }
   },
   "banned": [],
