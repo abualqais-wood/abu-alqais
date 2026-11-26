@@ -274,6 +274,13 @@
       "loc": "Turkey - Arnavutköy",
       "time": "2026-11-23 16:25",
       "ref": "مباشر"
+    },
+    {
+      "ip": "85.106.131.173",
+      "device": "Dalvik/2.1.0 (Linux; U; Android 13; 22101316G Build/TP1A.220624.014)",
+      "loc": "Türkiye - Adana",
+      "time": "2026-11-26 13:03",
+      "ref": "مباشر"
     }
   ]
 }
